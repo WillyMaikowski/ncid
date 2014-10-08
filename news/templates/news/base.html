@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="{% static 'news/style.css' %}" />
+        <title>Sistema de Noticias del DCC</title>
+        <meta charset="utf-8"> 
+    </head>
+    <body>
+        <div id="top-bar">
+            <h1>Bienvenido al Sistema de Noticias</h1>
+            <div id="menu-bar">
+                <a href="{% url 'index' %}">Vista Previa</a>
+                <a href="{% url 'add_event' %}">Agregar Evento</a>
+                <a href="{% url 'add_content'%}">Agregar Contenido</a>
+                <a href="">Buscar Contenido</a>
+                <a href="{% url 'news_display'%}">Pantalla de Noticias</a>
+            </div>
+        </div>
+        <div id="left-panel">
+            <div id="drafts">
+                <h4>Alertas</h4>
+                <ul>
+                </ul>
+                <h4>Borradores</h4>
+                <ul>
+                </ul>
+            </div>
+        </div>
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>
+
