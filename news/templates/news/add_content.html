@@ -3,10 +3,10 @@
 {% block content %}
 <h2>Seleccione una plantilla</h2>
 
-<ul class="template-list">
+<div class="template-display">
 {% for template in templates %}
     <li><a href=""> {{ template.name }}</a> </li>
 {% endfor %}
-</ul>    
+</div>    
 {% endblock %}
 

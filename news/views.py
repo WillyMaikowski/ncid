@@ -1,8 +1,15 @@
 from django.http import HttpResponse
 from django.core import serializers
 from django.shortcuts import render
+from django.forms import ModelForm
 
 from news.models import Template, Event, Slide
+
+# Forms
+class EventForm(ModelForm):
+    class Meta:
+        model = Event
+        exclude = ('creation_date',)
 
 # Pages used by the client.
 def index(request):
@@ -10,8 +17,15 @@ def index(request):
     return render(request, 'news/index.html', context)
 
 def add_event(request):
-    context = {}
-    return render(request, 'news/add_event.html', context)
+    if request.method == 'POST':
+        form = EventForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect(reverse('index:results'))
+    else:
+        form = EventForm()
+
+    context = {'form' : form}
+    return render(request, 'news/event_form.html', context)
 
 def add_content(request):
     context = {'templates' : Template.objects.all()}

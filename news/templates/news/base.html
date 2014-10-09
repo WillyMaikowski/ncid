@@ -2,34 +2,63 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="{% static 'news/style.css' %}" />
-        <title>Sistema de Noticias del DCC</title>
         <meta charset="utf-8"> 
+        <link rel="stylesheet" href="{% static 'news/css/normalize.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/css/base.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/css/slides.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/css/jquery-ui.css' %}" />
+        <title>Sistema de Noticias del DCC</title>
+        <script src="{% static 'news/js/jquery.min.js' %}" ></script>
+        <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
+
+        <script>
+             $(function() {
+                $( "#leftPanelAccordion" ).accordion({
+                    heightStyle: "fill"
+                });
+                $( "#leftPanel" ).resizable({
+                     resize: function() {
+                        $( "#leftPanelAccordion" ).accordion( "refresh" );
+                    }
+                });
+            });
+        </script>
     </head>
     <body>
-        <div id="top-bar">
+        <!-- The header with the navigaton bar -->
+        <header>
             <h1>Bienvenido al Sistema de Noticias</h1>
-            <div id="menu-bar">
+            <nav>
                 <a href="{% url 'index' %}">Vista Previa</a>
                 <a href="{% url 'add_event' %}">Agregar Evento</a>
                 <a href="{% url 'add_content'%}">Agregar Contenido</a>
-                <a href="">Buscar Contenido</a>
+                <a href="{% url 'search_content'%}">Buscar Contenido</a>
                 <a href="{% url 'news_display'%}">Pantalla de Noticias</a>
-            </div>
-        </div>
-        <div id="left-panel">
-            <div id="drafts">
-                <h4>Alertas</h4>
-                <ul>
-                </ul>
+            </nav>
+        </header>
+
+        <!-- The left panel -->
+        <aside id="leftPanel">
+            <div id=leftPanelAccordion>
                 <h4>Borradores</h4>
-                <ul>
-                </ul>
+                <div>
+                    Aqui van los borradores
+                </div>
+                <h4>Alertas</h4>
+                <div>
+                    Aqui van las alertas.
+                </div>
             </div>
-        </div>
-        <div id="content">
+        </aside>
+
+        <!-- The main content -->
+        <section class="content">
             {% block content %}{% endblock %}
-        </div>
+        </section>
+
+        <!-- The footer -->
+        <footer>
+        </footer>
     </body>
 </html>
 
