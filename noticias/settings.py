@@ -43,10 +43,13 @@ USE_I18N = True
 
 # If you set this to False, Django will not format dates, numbers and
 # calendars according to the current locale.
-USE_L10N = True
+USE_L10N = False
 
 # If you set this to False, Django will not use timezone-aware datetimes.
 USE_TZ = True
+
+# Date formats
+DATE_INPUT_FORMATS = ('%d-%m-%Y','%d/%m/%Y''%d/%m/%y')
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"

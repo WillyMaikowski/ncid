@@ -1,15 +1,22 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.core import serializers
 from django.shortcuts import render
-from django.forms import ModelForm
+from django import forms
+from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from news.models import Alert, Template, Event, Slide
 
 # Forms
-class EventForm(ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('creation_date',)
+        exclude = ('creation_timestamp',)
+        widgets = {
+            'date' : forms.DateInput(attrs = {'class': 'dateInput'}),
+            'start_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
+            'end_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
+        }
 
 # Pages used by the client.
 def index(request):
@@ -20,12 +27,17 @@ def add_event(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            return HttpResponseRedirect(reverse('index:results'))
+            event = form.save()
+            return HttpResponseRedirect(reverse('edit_event', kwargs={'event_id': event.pk }))
     else:
         form = EventForm()
 
     context = {'form' : form}
     return render(request, 'news/event_form.html', context)
+
+def edit_event(request, event_id):
+    event = Event.objects.get(pk=event_id)
+    return HttpResponse(str(event))
 
 def add_content(request):
     context = {'templates' : Template.objects.all()}

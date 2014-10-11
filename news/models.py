@@ -10,21 +10,24 @@ class Alert(models.Model):
     @classmethod
     def current_alerts(cls):
         now = timezone.now()
-        return cls.objects.filter(alert_date__lte = now, solved = False)
+        return cls.objects.filter(alert_date__lte = now, solved = False).order_by('alert_date')
 
 class Event(models.Model):
     title = models.CharField(u"Titulo", max_length=100)
-    place = models.CharField(u"Lugar", max_length=32)    
-    creation_date = models.DateTimeField(u"Fecha de creación")
-    event_date_and_time = models.DateTimeField(u"Fecha y hora del evento")
-    circulation_start = models.DateTimeField(u"Comienzo de circulación")
-    circulation_end = models.DateTimeField(u"Fin de circulación")
+    lecturer = models.CharField(u"Charlista", max_length=100)
+    place = models.CharField(u"Lugar", max_length=32)  
+    date = models.DateField(u"Fecha")
+    start_time = models.TimeField(u"Hora de comienzo")
+    end_time = models.TimeField(u"Hora de fin")
+    creation_timestamp = models.DateTimeField(u"Fecha y hora de Creación", default=timezone.now)
 
     @classmethod
     def current_events(cls):
         now = timezone.now()
-        return cls.objects.filter(circulation_start__lte = now, circulation_end__gte = now)
+        return cls.objects.filter(date = now.date(), end_time__gte = now.time()).order_by('date', 'start_time')
 
+    def __unicode__(self):
+        return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)
 
 class Template(models.Model):
     name = models.CharField(max_length=60)
