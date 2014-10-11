@@ -33,11 +33,29 @@ def add_event(request):
         form = EventForm()
 
     context = {'form' : form}
-    return render(request, 'news/event_form.html', context)
+    return render(request, 'news/add_event_form.html', context)
 
 def edit_event(request, event_id):
     event = Event.objects.get(pk=event_id)
-    return HttpResponse(str(event))
+    if request.method == 'POST':
+        # Check if deleting.
+        if 'delete' in request.POST:
+            event.delete()
+            return HttpResponseRedirect(reverse('index'))
+
+        # Validate the form and change the event.
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            event = form.save()
+            return HttpResponseRedirect(reverse('edit_event', kwargs={'event_id': event.pk }))
+    else:
+        form = EventForm(instance=event)
+
+    # Render the page.
+    context = {'form' : form,
+                'event_id' : event_id,
+                'creation_timestamp' : event.creation_timestamp}
+    return render(request, 'news/edit_event_form.html', context)
 
 def add_content(request):
     context = {'templates' : Template.objects.all()}
