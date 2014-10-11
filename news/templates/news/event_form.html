@@ -1,12 +1,35 @@
 {% extends "news/base.html" %}
 
 {% block content %}
-<h2>Nuevo Evento</h2>
+<h2>Agregar Evento</h2>
 
 <form action="{% url 'add_event' %}" method="post">
     {% csrf_token %}
     <table>
-    {{ form }}
+    <tr>
+        <td><label for="id_title">Titulo:</label></td>
+        <td><input id="id_title" maxlength="100" name="title" type="text"></td>
+    </tr>
+    <tr>
+        <td><label for="id_lecturer">Charlista:</label></td>
+        <td><input id="id_lecturer" maxlength="100" name="lecturer" type="text"></td>
+    </tr>
+    <tr>
+        <td><label for="id_place">Lugar:</label></td>
+        <td><input id="id_place" maxlength="100" name="place" type="text"></td>
+    </tr>
+    <tr>
+        <td><label for="id_date">Fecha:</label></td>
+        <td><input class="dateInput" id="id_date" maxlength="100" name="date" type="date"></td>
+    </tr>
+    <tr>
+        <td><label for="id_start_time">Desde:</label></td>
+        <td><input class="timeInput" id="id_start_time" maxlength="100" name="start_time" type="time"></td>
+    </tr>
+    <tr>
+        <td><label for="id_end_time">Hasta:</label></td>
+        <td><input class="timeInput" id="id_end_time" maxlength="100" name="end_time" type="time"></td>
+    </tr>
     </table>
     <input type="submit" value="Añadir Evento" />
 </form>

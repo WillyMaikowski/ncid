@@ -10,6 +10,7 @@
         <title>Sistema de Noticias del DCC</title>
         <script src="{% static 'news/js/jquery.min.js' %}" ></script>
         <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
+        <script src="{% static 'news/js/datepicker-es.js' %}" ></script>
         <script src="{% static 'news/js/edition.js' %}" ></script>
     </head>
     <body>
@@ -17,7 +18,7 @@
         <header>
             <h1>Bienvenido al Sistema de Noticias</h1>
             <nav>
-                <a href="{% url 'news_display'%}">Pantalla de Noticias</a>
+                <a href="{% url 'news_display'%}" target="_blank">Pantalla de Noticias</a>
                 <a href="{% url 'add_event' %}">Agregar Evento</a>
                 <a href="{% url 'add_content'%}">Agregar Contenido</a>
                 <a href="{% url 'search_content'%}">Buscar Contenido</a>
@@ -28,12 +29,10 @@
         <aside id="leftPanel">
             <div id=leftPanelAccordion>
                 <h4>Borradores</h4>
-                <div>
-                    Aqui van los borradores
+                <div id="draftsBlock">
                 </div>
                 <h4>Alertas</h4>
-                <div>
-                    Aqui van las alertas.
+                <div id="alertsBlock">
                 </div>
             </div>
         </aside>
