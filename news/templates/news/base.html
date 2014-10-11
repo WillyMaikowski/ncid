@@ -10,30 +10,17 @@
         <title>Sistema de Noticias del DCC</title>
         <script src="{% static 'news/js/jquery.min.js' %}" ></script>
         <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
-
-        <script>
-             $(function() {
-                $( "#leftPanelAccordion" ).accordion({
-                    heightStyle: "fill"
-                });
-                $( "#leftPanel" ).resizable({
-                     resize: function() {
-                        $( "#leftPanelAccordion" ).accordion( "refresh" );
-                    }
-                });
-            });
-        </script>
+        <script src="{% static 'news/js/edition.js' %}" ></script>
     </head>
     <body>
         <!-- The header with the navigaton bar -->
         <header>
             <h1>Bienvenido al Sistema de Noticias</h1>
             <nav>
-                <a href="{% url 'index' %}">Vista Previa</a>
+                <a href="{% url 'news_display'%}">Pantalla de Noticias</a>
                 <a href="{% url 'add_event' %}">Agregar Evento</a>
                 <a href="{% url 'add_content'%}">Agregar Contenido</a>
                 <a href="{% url 'search_content'%}">Buscar Contenido</a>
-                <a href="{% url 'news_display'%}">Pantalla de Noticias</a>
             </nav>
         </header>
 

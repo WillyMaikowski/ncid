@@ -3,7 +3,7 @@ from django.core import serializers
 from django.shortcuts import render
 from django.forms import ModelForm
 
-from news.models import Template, Event, Slide
+from news.models import Alert, Template, Event, Slide
 
 # Forms
 class EventForm(ModelForm):
@@ -44,5 +44,11 @@ def all_slide_templates(request):
     return HttpResponse(serializers.serialize("json", Template.objects.all()), content_type="application/json")
 
 def current_events(request):
-    return HttpResponse("Current Events")
+    return HttpResponse(serializers.serialize("json", Event.current_events()), content_type="application/json")
+
+def current_alerts(request):
+    return HttpResponse(serializers.serialize("json", Alert.current_alerts()), content_type="application/json")
+
+def current_slides(request):
+    return HttpResponse(serializers.serialize("json", Slide.current_slides()), content_type="application/json")
 
