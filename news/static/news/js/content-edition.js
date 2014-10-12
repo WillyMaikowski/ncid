@@ -159,7 +159,7 @@ function ContentEditor() {
             // Redirect if creating a new content.
             if(self.isNewContent) {
                 self.contentSlide.id = result.id;
-                window.location = self.contentSlide.url();
+                window.location = self.contentSlide.editUrl();
             }
         });
     }
