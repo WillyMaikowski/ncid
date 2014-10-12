@@ -59,6 +59,11 @@ function ContentSlideView() {
         this.title.html(content.title);
         this.text.html(content.text);
     }
+
+    // Change the slide class.
+    this.changeCssClass = function(cssClass) {
+        mainElement.attr("class", cssClass);
+    }
 }
 
 // The content slide class.

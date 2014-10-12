@@ -1,0 +1,27 @@
+[
+{
+    "fields": {
+        "css_class": "slide-title-text",
+        "name": "Titulo y Texto"
+    },
+    "model": "news.template",
+    "pk": 1
+},
+{
+    "fields": {
+        "css_class": "slide-title-image",
+        "name": "Titulo e Imagen"
+    },
+    "model": "news.template",
+    "pk": 2
+},
+{
+    "fields": {
+        "css_class": "slide-title-text-image-vertical",
+        "name": "Titulo, Texto e Imagen (Vertical)"
+    },
+    "model": "news.template",
+    "pk": 3
+}
+]
+

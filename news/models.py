@@ -30,8 +30,8 @@ class Event(models.Model):
         return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)
 
 class Template(models.Model):
-    name = models.CharField(max_length=60)
-    css_class = models.CharField(max_length=30)
+    name = models.CharField(max_length=100)
+    css_class = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "'%s' -> '%s'"  % (self.name, self.css_class)

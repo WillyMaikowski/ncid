@@ -72,3 +72,9 @@ section.content {
             border: 1px solid #DDDDDD;
             color: #333333;
          }
+
+#slideContainer {
+    padding: 20px;
+    background: lightGray;
+}
+

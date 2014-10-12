@@ -4,6 +4,17 @@ var BaseURL = '/news/';
 // The content editor.
 function ContentEditor() {
     this.isNewContent = false;
+    this.contentSlide = null;
+
+    this.bold = function() {
+        document.execCommand("bold", false, null);
+    }
+    this.italic = function() {
+        document.execCommand("italic", false, null);
+    }
+    this.underline = function() {
+        document.execCommand("underline", false, null);
+    }
 }
 
 ContentEditor.prototype.changeSlide = function() {
@@ -11,6 +22,7 @@ ContentEditor.prototype.changeSlide = function() {
     slideContainer.empty();
 
     this.contentSlide.renderTo(slideContainer);
+    this.makeEditable();
 }
 
 ContentEditor.prototype.newContent = function() {
@@ -30,6 +42,7 @@ ContentEditor.prototype.newContent = function() {
 }
 
 ContentEditor.prototype.useTemplate = function (template) {
+    this.contentSlide.view.changeCssClass(template.css_class);
 }
 
 ContentEditor.prototype.performTemplateSelection = function() {
@@ -95,6 +108,29 @@ ContentEditor.prototype.performTemplateSelection = function() {
             }
         }
     });
+}
+
+ContentEditor.prototype.makeEditable = function() {
+    var view = this.contentSlide.view;
+
+    // Use the content editable to create a richer experience.
+    view.title.attr("contenteditable", true);
+    view.title.keydown(this.onTitleKeyDown);
+
+    view.text.attr("contenteditable", true);
+    view.text.on("input", this.onTextKeyDown);
+}
+
+ContentEditor.prototype.onTitleKeyDown = function(event) {
+    // Filter some keypresses
+    if(event.which == 13) // Return
+        return false;
+    return true;
+}
+
+ContentEditor.prototype.onTextKeyDown = function(eventt) {
+    // TODO: Filter or catch key presses.
+    return true;
 }
 
 contentEditor = new ContentEditor();

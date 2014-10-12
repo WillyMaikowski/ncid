@@ -8,6 +8,10 @@
 
 {% block content %}
 <div id="contentToolBar">
+    <input type="button" value="N" onclick="contentEditor.bold()" />
+    <input type="button" value="C" onclick="contentEditor.italic()" />
+    <input type="button" value="S" onclick="contentEditor.underline()" />
+    <input type="button" value="Plantilla" onclick="contentEditor.performTemplateSelection()" />
 </div>
 
 <div id="slideContainer">
