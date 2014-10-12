@@ -11,7 +11,8 @@
         <script src="{% static 'news/js/jquery.min.js' %}" ></script>
         <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
         <script src="{% static 'news/js/datepicker-es.js' %}" ></script>
-        <script src="{% static 'news/js/edition.js' %}" ></script>
+        <script src="{% static 'news/js/edition-common.js' %}" ></script>
+        {% block head %}{% endblock %}
     </head>
     <body>
         <!-- The header with the navigaton bar -->
@@ -38,7 +39,7 @@
         </aside>
 
         <!-- The main content -->
-        <section class="content">
+        <section id="contentSection" class="content">
             {% block content %}{% endblock %}
         </section>
 

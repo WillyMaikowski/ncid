@@ -58,7 +58,7 @@ def edit_event(request, event_id):
     return render(request, 'news/edit_event_form.html', context)
 
 def add_content(request):
-    context = {'templates' : Template.objects.all()}
+    context = {}
     return render(request, 'news/add_content.html', context)
 
 def search_content(request):

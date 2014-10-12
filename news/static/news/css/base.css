@@ -44,3 +44,31 @@ section.content {
     overflow-y: auto;
 
 }
+
+#templateSelection .ui-selecting {
+    background: #FECA40;
+}
+
+#templateSelection .ui-selected {
+    background: #F39814; color: white;
+}
+
+#templateSelection {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+#templateSelection li {
+    float: left;
+    margin: 3px;
+    padding: 0.4em;
+    font-size: 1.4em;
+    height: 18px;
+}
+
+.ui-widget-content {
+            background: #cedc98;
+            border: 1px solid #DDDDDD;
+            color: #333333;
+         }

@@ -1,12 +1,23 @@
 {% extends "news/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <script src="{% static 'news/js/content.js' %}" ></script>
+    <script src="{% static 'news/js/content-edition.js' %}" ></script>
+{% endblock %}
 
 {% block content %}
-<h2>Seleccione una plantilla</h2>
+<div id="contentToolBar">
+</div>
 
-<div class="template-display">
-{% for template in templates %}
-    <li><a href=""> {{ template.name }}</a> </li>
-{% endfor %}
-</div>    
+<div id="slideContainer">
+</div>
+
+<div id="contentStatusBar">
+</div>
+
+<script>
+    $(document).ready(function () { contentEditor.newContent(); });
+</script>
 {% endblock %}
 
