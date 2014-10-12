@@ -17,12 +17,15 @@
     <button id="slide-template" onclick="contentEditor.templateSelection()" >Plantilla</button>
 </div>
 
+<div id="slideErrorMessages">
+</div>
+
 <div id="slideContainer">
 </div>
 
 {% block initEditor %}
 <script>
-    // TODO: Load the requested element.
+    $(document).ready(function() {contentEditor.loadContent({{ content.pk }}); })
 </script>
 {% endblock %}
 {% endblock %}
@@ -35,11 +38,10 @@
     <span>Fin Circulación:</span>
     <input type="text" id="end-date" class="dateInput">
     <input type="text" id="end-time" >
-    <input type="checkbox" name="published" value="0"  onclick="contentEditor.changed()">Publicado
+    <input type="checkbox" id="published">Publicado
     <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
     <input type="submit" value="Guardar" onclick="contentEditor.save()">
     <input type="submit" value="Cancelar" onclick="contentEditor.cancel()">
-</ul>
 </div>
 {% endblock %}
 

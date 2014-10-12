@@ -1,10 +1,12 @@
 // The application base URL.
 var BaseURL = '/news/';
 var IndexURL = BaseURL;
+var AddContentURL = BaseURL + 'content/add';
 
 // The content editor.
 function ContentEditor() {
     this.isNewContent = false;
+    this.isFirstTemplateBeingSelected = false;
     this.contentSlide = null;
 
     // Rich text editor commands
@@ -29,13 +31,35 @@ function ContentEditor() {
         slideContainer.empty();
 
         this.contentSlide.renderTo(slideContainer);
+        this.loadMetadata();
         this.makeEditable();
     }
 
+    this.loadContent = function(id) {
+        var self = this;
+        var content = new ContentSlide();
+        content.id = id;
+
+        // Ensure the templates are loaded.
+        SlideTemplates.load(function() {
+            // Get the slides.
+            $.getJSON(content.url(), function(data) {
+                // Read the slide data.
+                content.readData(data[0]);
+                self.contentSlide = content;
+                
+                // Display the slide
+                self.changeSlide();
+            });
+        });
+    }
+
+    // Starts editing a new content
     this.newContent = function() {
         // Initialize the content
         this.contentSlide = new ContentSlide();
         this.isNewContent = true;
+        this.isFirstTemplateBeingSelected = true;
 
         // Use the slide container
         this.changeSlide();
@@ -48,6 +72,7 @@ function ContentEditor() {
         this.contentSlide.view.changeCssClass(template.css_class);
     }
 
+    // Makes the slide content editable.
     this.makeEditable = function() {
         var view = this.contentSlide.view;
 
@@ -59,6 +84,7 @@ function ContentEditor() {
         view.text.on("input", this.onTextKeyDown);
     }
 
+    // This opens the template selection dialog.
     this.templateSelection = function () {
         var self = this;
 
@@ -67,6 +93,7 @@ function ContentEditor() {
         });
     }
 
+    // Handle keydown when editing the title.
     this.onTitleKeyDown = function(event) {
         // Filter some keypresses
         if(event.which == 13) // Return
@@ -74,19 +101,76 @@ function ContentEditor() {
         return true;
     }
 
+    // Handle keydown when editing the text.
     this.onTextKeyDown = function(eventt) {
         // TODO: Filter or catch key presses.
         return true;
     }
 
-    this.save = function() {
+    // Helper method to parse dates.
+    this.parseDate = function (dateString) {
+        $.datepicker
     }
+
+    // This method stores the 
+    this.storeMetadata = function() {
+        this.contentSlide.start_date = $("#start-date").val();
+        this.contentSlide.start_time = $("#start-time").val();
+        this.contentSlide.end_date = $("#end-date").val();
+        this.contentSlide.end_time = $("#end-time").val();
+        this.contentSlide.published = $("#published").is(":checked");
+    }
+
+    this.loadMetadata = function() {
+        $("#start-date").val(this.contentSlide.start_date);
+        $("#start-time").val(this.contentSlide.start_time);
+        $("#end-date").val(this.contentSlide.end_date);
+        $("#end-time").val(this.contentSlide.end_time);
+        $("#published").prop("checked", this.contentSlide.published);
+    }
+
+    this.updateModel = function() {
+        this.contentSlide.view.updateModel();
+        this.storeMetadata();
+    }
+
+    this.saveURL = function() {
+        if(this.isNewContent)
+            return AddContentURL;
+        return this.contentSlide.editUrl()
+    }
+
+    this.save = function() {
+        // Transfer the data from the view into the model.
+        var self = this;
+        this.updateModel();
+
+        // Encode the data for posting it.
+        var data = this.contentSlide.encodeForPost();
+
+        // Post the data.
+        $.post(this.saveURL(), data, function(result) {
+            // Display the error message.
+            if(!result.accepted) {
+                self.showValidationErrors(result.errors);
+                return;
+            }
+
+            // Redirect if creating a new content.
+            if(self.isNewContent) {
+                self.contentSlide.id = result.id;
+                window.location = self.contentSlide.url();
+            }
+        });
+    }
+
     this.preview = function() {
     }
     this.cancel = function() {
         window.location = IndexURL;
     }
-    this.changed = function() {
+    this.showValidationErrors = function(errors) {
+        console.log(errors);
     }
 }
 
@@ -102,6 +186,10 @@ ContentEditor.prototype.performTemplateSelection = function() {
 
     // Add an element for each template
     var templates = SlideTemplates.all;
+    if(this.contentSlide.template == null)
+        this.contentSlide.template = templates[0];
+
+    var oldTemplate = this.contentSlide.template;
     var selectedTemplate = templates[0];
     for(var i = 0; i < templates.length; ++i) {
         // Create the template selection element.
@@ -141,17 +229,25 @@ ContentEditor.prototype.performTemplateSelection = function() {
         modal: true,
         buttons: {
             'Aceptar': function() {
+                // Set the selected template in the model.
+                self.contentSlide.template = selectedTemplate;
+
+                // This content is not new anymore.
+                self.isFirstTemplateBeingSelected = false;
+
                 // Close the dialog
-                self.isNewContent = false;
                 $(this).dialog("close");
                 dialog.remove();
             },
             'Cancelar': function() {
                 // If this is a new content, just redirect to the index page.
-                if(self.isNewContent) {
+                if(self.isFirstTemplateBeingSelected) {
                     window.location = BaseURL;
                     return;
                 }
+
+                // Restore the old template.
+                self.useTemplate(oldTemplate);
 
                 // Close the dialog
                 $(this).dialog("close");

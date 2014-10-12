@@ -39,13 +39,17 @@ class Template(models.Model):
 
 class Slide(models.Model):
     title = models.CharField(u"Titulo", max_length=255)
-    circulation_start = models.DateTimeField(u"Comienzo de circulación")
-    circulation_end = models.DateTimeField(u"Fin de circulación")
-    display_duration = models.FloatField(u"Tiempo en pantalla")
     content = models.TextField(u"Contenido")
     image = models.ImageField(u"Imagen", upload_to='news-images', null=True, blank=True)
     template = models.ForeignKey(Template)
+
+    circulation_start = models.DateTimeField(u"Comienzo de circulación")
+    circulation_end = models.DateTimeField(u"Fin de circulación")
+
+    display_duration = models.FloatField(u"Tiempo en pantalla")
+    published = models.BooleanField(u"Publicado", default=False)
     associated_event = models.ForeignKey(Event, null=True, blank=True)
+
     creation_date = models.DateTimeField(u"Fecha y hora de creación", default=timezone.now)
     last_modification_date = models.DateTimeField(u"Fecha y hora de ultima modificación", default=timezone.now)
 

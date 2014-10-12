@@ -69,8 +69,8 @@ function ContentSlideView(model) {
 
     // Put the data back in the model
     this.updateModel = function () {
-        this.model.title = title.html();       
-        this.model.text = text.html();
+        this.model.title = this.title.html();       
+        this.model.text = this.text.html();
 
         var image = this.image.attr("src");
         if(image != BlankImage)
@@ -85,18 +85,88 @@ function ContentSlideView(model) {
     };
 }
 
+// Formats a date for the current localization.
+function localFormatDate(date) {
+    return $.datepicker.formatDate("dd-mm-yy", date);
+}
+
 // The content slide class.
 function ContentSlide() {
+    this.id = null;
     this.title = "Titulo";
     this.text = "Contenido";
     this.image = null;
-    this.start_date = new Date(Date.now());
-    this.end_date = new Date(Date.now());
+    this.start_date = localFormatDate(new Date(Date.now()));
+    this.start_time = "00:00";
+    this.end_date = localFormatDate(new Date(Date.now()));
+    this.end_time = "23:59";
     this.published = false;
     this.display_duration = 15.0;
     this.template = null;
 
     this.view = new ContentSlideView(this);
+
+    // This method gives the REST url of the slide
+    this.url = function() {
+        return BaseURL + "content/" + this.id + "/";
+    }
+    this.editUrl = function() {
+        return this.url() + 'edit';
+    }
+
+    this.readData = function(data) {
+        // Helper functions for converting the dates.
+        function formatDate(datetime) {
+            return $.datepicker.formatDate('dd-mm-yy', datetime);
+        }
+
+        function numberFormat(number) {
+            if(number < 10)
+                return '0' + number;
+            return number;
+        }
+
+        function formatTime(datetime) {
+            return numberFormat(datetime.getHours()) + ':' + numberFormat(datetime.getMinutes());
+        }
+
+        var fields = data.fields;
+        this.title = fields.title;
+        this.text = fields.content;
+        this.image = fields.image;
+
+        var startDateTime = new Date(fields.circulation_start);
+        this.start_date = formatDate(startDateTime);
+        this.start_time = formatTime(startDateTime);
+
+        var endDateTime = new Date(fields.circulation_end);
+        this.end_date = formatDate(endDateTime);
+        this.end_time = formatTime(endDateTime);
+
+        this.display_duration = fields.display_duration;
+        this.published = fields.published;
+        this.template = SlideTemplates.all[fields.template-1]
+
+        if(this.image.length == 0)
+            this.image = null;
+        console.log(this);
+    }
+
+    // This method encodes the slide into a simpler object for posting.
+    this.encodeForPost = function() {
+        return {
+            title: this.title,
+            text: this.text,
+            image: this.image,
+            start_date: this.start_date,
+            start_time: this.start_time,
+            end_date: this.end_date,
+            end_time: this.end_time,
+            published: this.published,
+            display_duration: this.display_duration,
+            template: this.template.id,
+        }
+    }
 
     // Renders the element into a container object.
     this.renderTo = function(container) {
