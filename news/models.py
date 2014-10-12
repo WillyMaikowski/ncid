@@ -38,15 +38,16 @@ class Template(models.Model):
         return "'%s' -> '%s'"  % (self.name, self.css_class)
 
 class Slide(models.Model):
-    title = models.CharField(max_length=255)
-    creation_date = models.DateTimeField()
-    circulation_start = models.DateTimeField()
-    circulation_end = models.DateTimeField()
-    display_duration = models.IntegerField()
-    content = models.TextField()
-    image = models.ImageField(upload_to='new-images', null=True, blank=True)
+    title = models.CharField(u"Titulo", max_length=255)
+    circulation_start = models.DateTimeField(u"Comienzo de circulación")
+    circulation_end = models.DateTimeField(u"Fin de circulación")
+    display_duration = models.FloatField(u"Tiempo en pantalla")
+    content = models.TextField(u"Contenido")
+    image = models.ImageField(u"Imagen", upload_to='news-images', null=True, blank=True)
     template = models.ForeignKey(Template)
     associated_event = models.ForeignKey(Event, null=True, blank=True)
+    creation_date = models.DateTimeField(u"Fecha y hora de creación", default=timezone.now)
+    last_modification_date = models.DateTimeField(u"Fecha y hora de ultima modificación", default=timezone.now)
 
     @classmethod
     def current_slides(cls):

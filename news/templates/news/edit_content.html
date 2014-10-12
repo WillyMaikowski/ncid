@@ -1,0 +1,45 @@
+{% extends "news/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <script src="{% static 'news/js/content.js' %}" ></script>
+    <script src="{% static 'news/js/content-edition.js' %}" ></script>
+{% endblock %}
+
+{% block content %}
+<div id="contentToolBar" class="ui-widget-header ui-corner-all">
+    <button id="edit-undo" onclick="contentEditor.undo()">Deshacer</button>
+    <button id="edit-redo" onclick="contentEditor.redo()">Rehacer</button>
+    <button id="format-bold" onclick="contentEditor.bold()">Negrita</button>
+    <button id="format-italic" onclick="contentEditor.italic()">Cursiva</button>
+    <button id="format-underline" onclick="contentEditor.underline()">Subrayado</button>
+
+    <button id="slide-template" onclick="contentEditor.templateSelection()" >Plantilla</button>
+</div>
+
+<div id="slideContainer">
+</div>
+
+{% block initEditor %}
+<script>
+    // TODO: Load the requested element.
+</script>
+{% endblock %}
+{% endblock %}
+
+{% block footer %}
+<div id="contentStatusBar">
+    <span>Inicio Circulación:</span>
+    <input type="text" id="start-date" class="dateInput">
+    <input type="text" id="start-time" >
+    <span>Fin Circulación:</span>
+    <input type="text" id="end-date" class="dateInput">
+    <input type="text" id="end-time" >
+    <input type="checkbox" name="published" value="0"  onclick="contentEditor.changed()">Publicado
+    <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
+    <input type="submit" value="Guardar" onclick="contentEditor.save()">
+    <input type="submit" value="Cancelar" onclick="contentEditor.cancel()">
+</ul>
+</div>
+{% endblock %}
+

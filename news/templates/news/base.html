@@ -3,10 +3,10 @@
 <html>
     <head>
         <meta charset="utf-8"> 
-        <link rel="stylesheet" href="{% static 'news/css/normalize.css' %}" />
-        <link rel="stylesheet" href="{% static 'news/css/base.css' %}" />
-        <link rel="stylesheet" href="{% static 'news/css/slides.css' %}" />
-        <link rel="stylesheet" href="{% static 'news/css/jquery-ui.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/style/normalize.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/style/base.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/style/slides.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/style/jquery-ui.css' %}" />
         <title>Sistema de Noticias del DCC</title>
         <script src="{% static 'news/js/jquery.min.js' %}" ></script>
         <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
@@ -32,9 +32,6 @@
                 <h4>Borradores</h4>
                 <div id="draftsBlock">
                 </div>
-                <h4>Alertas</h4>
-                <div id="alertsBlock">
-                </div>
             </div>
         </aside>
 
@@ -45,6 +42,7 @@
 
         <!-- The footer -->
         <footer>
+            {% block footer %}{% endblock %}
         </footer>
     </body>
 </html>

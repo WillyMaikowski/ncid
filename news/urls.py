@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^alert/currents$', views.current_alerts, name='current_alerts'),
 
     # Content URLs
+    url(r'^content/(?P<content_id>\d+)/$', views.edit_content, name='edit_content'),
     url(r'^content/add$', views.add_content, name='add_content'),
     url(r'^content/search/$', views.search_content, name='search_content'),
     url(r'^content/currents$', views.current_slides, name='current_slides'),

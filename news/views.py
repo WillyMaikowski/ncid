@@ -18,6 +18,12 @@ class EventForm(forms.ModelForm):
             'end_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
         }
 
+class SlideForm(forms.Form):
+    class Meta:
+        model = Slide
+        exclude = ('creation_timestamp',)
+
+
 # Pages used by the client.
 def index(request):
     context = {}
@@ -56,6 +62,14 @@ def edit_event(request, event_id):
                 'event_id' : event_id,
                 'creation_timestamp' : event.creation_timestamp}
     return render(request, 'news/edit_event_form.html', context)
+
+def edit_content(request, content_id):
+    content = Event.objects.get(pk=content_id)
+    if request.method == 'POST':
+        pass
+
+    context = {'content' : content}
+    return render(request, 'news/edit_content.html', context)
 
 def add_content(request):
     context = {}

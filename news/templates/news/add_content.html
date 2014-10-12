@@ -1,25 +1,6 @@
-{% extends "news/base.html" %}
-{% load staticfiles %}
+{% extends "news/edit_content.html" %}
 
-{% block head %}
-    <script src="{% static 'news/js/content.js' %}" ></script>
-    <script src="{% static 'news/js/content-edition.js' %}" ></script>
-{% endblock %}
-
-{% block content %}
-<div id="contentToolBar">
-    <input type="button" value="N" onclick="contentEditor.bold()" />
-    <input type="button" value="C" onclick="contentEditor.italic()" />
-    <input type="button" value="S" onclick="contentEditor.underline()" />
-    <input type="button" value="Plantilla" onclick="contentEditor.performTemplateSelection()" />
-</div>
-
-<div id="slideContainer">
-</div>
-
-<div id="contentStatusBar">
-</div>
-
+{% block initEditor %}
 <script>
     $(document).ready(function () { contentEditor.newContent(); });
 </script>
