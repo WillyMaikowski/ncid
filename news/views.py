@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import json
-from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core import serializers
 from django.shortcuts import render
@@ -100,7 +100,7 @@ def edit_event(request, event_id):
                 'creation_timestamp' : event.creation_timestamp}
     return render(request, 'news/edit_event_form.html', context)
 
-@csrf_protect
+@ensure_csrf_cookie
 def edit_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     if request.method == 'POST':
@@ -122,7 +122,7 @@ def edit_content(request, content_id):
     context = {'content' : content}
     return render(request, 'news/edit_content.html', context)
 
-@csrf_protect
+@ensure_csrf_cookie
 def add_content(request):
     if request.method == 'POST':
         form = SlideForm(request.POST)
