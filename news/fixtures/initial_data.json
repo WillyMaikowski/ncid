@@ -2,7 +2,8 @@
 {
     "fields": {
         "css_class": "slide-title-text",
-        "name": "Titulo y Texto"
+        "name": "Titulo y Texto",
+        "image_url": "/news/css/image/slide-title-text.png"
     },
     "model": "news.template",
     "pk": 1
@@ -10,7 +11,8 @@
 {
     "fields": {
         "css_class": "slide-title-image",
-        "name": "Titulo e Imagen"
+        "name": "Titulo e Imagen",
+        "image_url": "/news/css/image/slide-title-image.png"
     },
     "model": "news.template",
     "pk": 2
@@ -18,10 +20,28 @@
 {
     "fields": {
         "css_class": "slide-title-text-image-vertical",
-        "name": "Titulo, Texto e Imagen (Vertical)"
+        "name": "Titulo, Texto e Imagen (Vertical)",
+        "image_url": "/news/css/image/slide-title-text-image-vertical.png"
     },
     "model": "news.template",
     "pk": 3
+},
+{
+    "fields": {
+        "css_class": "slide-image",
+        "name": "Imagen",
+        "image_url": "/news/css/image/slide-image.png"
+    },
+    "model": "news.template",
+    "pk": 4
+},
+{
+    "fields": {
+        "css_class": "slide-title-text-image-horizontal",
+        "name": "Titulo, Texto e Imagen (Horizontal)",
+        "image_url": "/news/css/image/slide-title-text-image-horizontal.png"
+    },
+    "model": "news.template",
+    "pk": 5
 }
 ]
-

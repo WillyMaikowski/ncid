@@ -13,9 +13,9 @@ class Alert(models.Model):
         return cls.objects.filter(alert_date__lte = now, solved = False).order_by('alert_date')
 
 class Event(models.Model):
-    title = models.CharField(u"Titulo", max_length=100)
+    title = models.CharField(u"Titulo", max_length=255)
     lecturer = models.CharField(u"Charlista", max_length=100)
-    place = models.CharField(u"Lugar", max_length=32)  
+    place = models.CharField(u"Lugar", max_length=255)
     date = models.DateField(u"Fecha")
     start_time = models.TimeField(u"Hora de comienzo")
     end_time = models.TimeField(u"Hora de fin")
@@ -32,12 +32,13 @@ class Event(models.Model):
 class Template(models.Model):
     name = models.CharField(max_length=100)
     css_class = models.CharField(max_length=100)
+    image_url = models.CharField(max_length=100)
 
     def __unicode__(self):
         return "'%s' -> '%s'"  % (self.name, self.css_class)
 
 class Slide(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=255)
     creation_date = models.DateTimeField()
     circulation_start = models.DateTimeField()
     circulation_end = models.DateTimeField()
