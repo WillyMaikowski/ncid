@@ -146,6 +146,7 @@ function ContentSlide() {
     this.published = false;
     this.display_duration = 15.0;
     this.template = null;
+    this.draft = false;
 
     this.view = new ContentSlideView(this);
 
@@ -180,7 +181,8 @@ function ContentSlide() {
 
         this.display_duration = fields.display_duration;
         this.published = fields.published;
-        this.template = SlideTemplates.all[fields.template-1]
+        this.draft = fields.draft;
+        this.template = SlideTemplates.all[fields.template-1];
 
         if(this.image.length == 0)
             this.image = null;
@@ -197,6 +199,7 @@ function ContentSlide() {
             end_date: this.end_date,
             end_time: this.end_time,
             published: this.published,
+            draft: this.draft,
             display_duration: this.display_duration,
             template: this.template.id,
         }

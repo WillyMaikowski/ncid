@@ -5,6 +5,7 @@ var AddContentURL = BaseURL + 'content/add';
 
 // The content editor.
 function ContentEditor() {
+    var self = this;
     this.isNewContent = false;
     this.isFirstTemplateBeingSelected = false;
     this.contentSlide = null;
@@ -12,18 +13,23 @@ function ContentEditor() {
     // Rich text editor commands
     this.bold = function() {
         document.execCommand("bold", false, null);
+        this.autosave();
     }
     this.italic = function() {
         document.execCommand("italic", false, null);
+        this.autosave();
     }
     this.underline = function() {
         document.execCommand("underline", false, null);
+        this.autosave();
     }
     this.undo = function() {
         document.execCommand("undo", false, null);
+        this.autosave();
     }
     this.redo = function() {
         document.execCommand("redo", false, null);
+        this.autosave();
     }
 
     this.changeSlide = function() {
@@ -79,9 +85,11 @@ function ContentEditor() {
         // Use the content editable to create a richer experience.
         view.title.attr("contenteditable", true);
         view.title.keydown(this.onTitleKeyDown);
+        view.title.on("blur paste input", this.onTitleChanged);
 
         view.text.attr("contenteditable", true);
-        view.text.on("input", this.onTextKeyDown);
+        view.text.keydown("input", this.onTextKeyDown);
+        view.text.on("blur paste input", this.onTextChanged);
     }
 
     // This opens the template selection dialog.
@@ -98,13 +106,23 @@ function ContentEditor() {
         // Filter some keypresses
         if(event.which == 13) // Return
             return false;
+
         return true;
     }
 
+    this.onTitleChanged = function(event) {
+        self.autosave();
+    }
+
     // Handle keydown when editing the text.
-    this.onTextKeyDown = function(eventt) {
+    this.onTextKeyDown = function(event) {
         // TODO: Filter or catch key presses.
+        self.autosave();
         return true;
+    }
+
+    this.onTextChanged = function(event) {
+        self.autosave();
     }
 
     // Helper method to parse dates.
@@ -140,12 +158,24 @@ function ContentEditor() {
         return this.contentSlide.editUrl()
     }
 
+    // The autosave keeps the current draft flag.
+    this.autosave = function() {
+        this.performSave(this.contentSlide.draft);
+    }
+
+    // The save button removes the draft flag.
     this.save = function() {
+        this.performSave(false);
+    }
+
+    // This performs a save.
+    this.performSave = function(asDraft) {
         // Transfer the data from the view into the model.
         var self = this;
         this.updateModel();
 
         // Encode the data for posting it.
+        this.contentSlide.draft = asDraft;
         var data = this.contentSlide.encodeForPost();
 
         // Post the data.

@@ -15,11 +15,12 @@ urlpatterns = patterns('',
     url(r'^alert/currents$', views.current_alerts, name='current_alerts'),
 
     # Content URLs
-    url(r'^content/(?P<content_id>\d+)/$', views.get_content, name='edit_content'),
+    url(r'^content/(?P<content_id>\d+)/$', views.get_content, name='get_content'),
     url(r'^content/(?P<content_id>\d+)/edit$', views.edit_content, name='edit_content'),
     url(r'^content/add$', views.add_content, name='add_content'),
     url(r'^content/all$', views.all_contents, name='all_content'),
     url(r'^content/currents$', views.current_slides, name='current_slides'),
+    url(r'^content/draft$', views.current_drafts, name='current_drafts'),
 
     url(r'^search/$', views.search_content, name='search_content'),
     url(r'^search/json', views.search_content_query_json, name='search_content_query_json'),

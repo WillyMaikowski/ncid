@@ -1,5 +1,6 @@
 // The application base URL.
 var BaseURL = '/news/';
+var DraftURL = BaseURL + 'content/draft';
 
 // Setup some things when the DOM is ready.
 $(document).ready(function() {
@@ -61,3 +62,39 @@ function localFormatDate(date) {
     return $.datepicker.formatDate("dd/mm/yy", date);
 }
 
+// Draft bar
+function DraftBar() {
+    var RefreshInterval = 1000;
+    var self = this;
+
+    // Loads the data into the draft bar.
+    this.loadData = function(data) {
+        var contents = readContentArray(data);
+        var draftsBlock = $("#draftsBlock").empty();
+        
+        for(var i = 0; i < contents.length; ++i)
+            this.addContentToBlock(contents[i], draftsBlock);
+    }
+
+    // Adds a content into a draft block.
+    this.addContentToBlock = function(content, block) {
+        var element = $( "<a></a>" );
+        element.attr("href", content.editUrl());
+        element.html(content.title);
+        block.append($( "<li></li>").append(element));
+    }
+
+    // Reloads the drafts.
+    this.load = function() {
+        $.getJSON(DraftURL, function(data) {
+            self.loadData(data);
+        }); 
+    }
+
+    // Load when the document is ready.
+    $(document).ready(function() {
+        setInterval(function(){self.load()}, RefreshInterval);
+    })
+}
+
+var draftBar = new DraftBar()

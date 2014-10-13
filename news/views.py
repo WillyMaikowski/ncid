@@ -38,6 +38,8 @@ class SlideForm(forms.Form):
 
     display_duration = forms.FloatField(label=u"Tiempo en pantalla")
     published = forms.BooleanField(label=u"Publicado", required=False)
+    draft = forms.BooleanField(label=u"Borrador", required=False)
+
     associated_event = forms.IntegerField(required=False)
 
     def store_in_slide(self, slide):
@@ -52,6 +54,7 @@ class SlideForm(forms.Form):
 
         slide.display_duration = data['display_duration']
         slide.published = data['published']
+        slide.draft = data['draft']
 
         # Get the associated template.
         slide.template = Template.objects.get(pk=data['template'])
@@ -122,30 +125,14 @@ def edit_content(request, content_id):
     context = {'content' : content}
     return render(request, 'news/edit_content.html', context)
 
-@ensure_csrf_cookie
 def add_content(request):
-    if request.method == 'POST':
-        form = SlideForm(request.POST)
-        response = {}
+    content = Slide()
+    content.title = 'Borrador Sin Titulo'
+    content.content = 'Borrador'
+    content.template = Template.objects.all()[0]
+    content.save()
 
-        if form.is_valid():
-            response['accepted'] = True
-
-            # Store the slide data.
-            slide = Slide();
-            form.store_in_slide(slide)
-            slide.save()
-
-            # Send back the id
-            response['id'] = slide.pk
-
-        else:
-            response['accepted'] = False
-            response['errors'] = form.errors
-        return HttpResponse(json.dumps(response), content_type="application/json")
-
-    context = {}
-    return render(request, 'news/add_content.html', context)
+    return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
 
 def search_content(request):
     context = {}
@@ -155,17 +142,16 @@ def news_display(request):
     context = {}
     return render(request, 'news/news_display.html', context)
 
-
 # Content searches
 def search_content_by_title(term):
     events = Event.objects.filter(title__icontains=term).order_by('-date', '-start_time')
-    slides = Slide.objects.filter(title__icontains=term).order_by('-circulation_start')
+    slides = Slide.objects.filter(draft=False, title__icontains=term).order_by('-circulation_start')
     return list(chain(events, slides))
 
 def search_content_by_date(term):
     parsedDate = datetime.strptime(term, '%d/%m/%Y').date()
-    events = Event.objects.filter(date__startswith=parsedDate).order_by('-date', '-start_time')
-    slides = Slide.objects.filter(circulation_start__startswith=parsedDate).order_by('-circulation_start')
+    events = Event.objects.filter(date=parsedDate).order_by('-date', '-start_time')
+    slides = Slide.objects.filter(draft=False, circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
     return list(chain(events, slides))
 
 
@@ -199,6 +185,9 @@ def current_alerts(request):
 
 def current_slides(request):
     return HttpResponse(serializers.serialize("json", Slide.current_slides()), content_type="application/json")
+
+def current_drafts(request):
+    return HttpResponse(serializers.serialize("json", Slide.current_drafts()), content_type="application/json")
 
 def search_content_query_json(request):
     category = request.GET['category']

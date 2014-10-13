@@ -23,12 +23,13 @@ class Event(models.Model):
     date = models.DateField(u"Fecha")
     start_time = models.TimeField(u"Hora de comienzo")
     end_time = models.TimeField(u"Hora de fin")
+    published = models.BooleanField(u"Publicado", default=False)
     creation_timestamp = models.DateTimeField(u"Fecha y hora de Creación", default=timezone.now)
 
     @classmethod
     def current_events(cls):
         now = timezone.now()
-        return cls.objects.filter(date = now.date(), end_time__gte = now.time()).order_by('date', 'start_time')
+        return cls.objects.filter(published=True, date = now.date(), end_time__gte = now.time()).order_by('date', 'start_time')
 
     def __unicode__(self):
         return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)
@@ -48,11 +49,12 @@ class Slide(models.Model):
     image = models.ImageField(u"Imagen", upload_to='news-images', null=True, blank=True)
     template = models.ForeignKey(Template)
 
-    circulation_start = models.DateTimeField(u"Comienzo de circulación")
-    circulation_end = models.DateTimeField(u"Fin de circulación")
+    circulation_start = models.DateTimeField(u"Comienzo de circulación", default=timezone.now)
+    circulation_end = models.DateTimeField(u"Fin de circulación", default=timezone.now)
 
-    display_duration = models.FloatField(u"Tiempo en pantalla")
+    display_duration = models.FloatField(u"Tiempo en pantalla", default=15.0)
     published = models.BooleanField(u"Publicado", default=False)
+    draft = models.BooleanField(u"Borrador", default=True)
     associated_event = models.ForeignKey(Event, null=True, blank=True)
 
     creation_date = models.DateTimeField(u"Fecha y hora de creación", default=timezone.now)
@@ -61,5 +63,10 @@ class Slide(models.Model):
     @classmethod
     def current_slides(cls):
         now = timezone.now()
-        return cls.objects.filter(circulation_start__lte = now, circulation_end__gte = now).order_by('-circulation_start')
+        return cls.objects.filter(published=True, circulation_start__lte = now, circulation_end__gte = now).order_by('-circulation_start')
+
+    @classmethod
+    def current_drafts(cls):
+        now = timezone.now()
+        return cls.objects.filter(draft = True).order_by('-creation_date')
 
