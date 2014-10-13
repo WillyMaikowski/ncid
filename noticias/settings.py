@@ -49,7 +49,7 @@ USE_L10N = False
 USE_TZ = True
 
 # Date formats
-DATE_INPUT_FORMATS = ('%d-%m-%Y','%d/%m/%Y''%d/%m/%y')
+DATE_INPUT_FORMATS = ('%d/%m/%Y', '%Y-%m-%d', '%d/%m/%y')
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"

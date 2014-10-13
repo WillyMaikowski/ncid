@@ -2,6 +2,9 @@
 from django.db import models
 from django.utils import timezone
 
+def current_author():
+    return 'unknown'
+
 class Alert(models.Model):
     message = models.CharField(u"Mensaje", max_length=100)
     alert_date = models.DateTimeField(u"Fecha de alerta")
@@ -13,6 +16,7 @@ class Alert(models.Model):
         return cls.objects.filter(alert_date__lte = now, solved = False).order_by('alert_date')
 
 class Event(models.Model):
+    author = models.CharField(u"Author", max_length=64, default=current_author)
     title = models.CharField(u"Titulo", max_length=255)
     lecturer = models.CharField(u"Charlista", max_length=100)
     place = models.CharField(u"Lugar", max_length=255)
@@ -38,6 +42,7 @@ class Template(models.Model):
         return "'%s' -> '%s'"  % (self.name, self.css_class)
 
 class Slide(models.Model):
+    author = models.CharField(u"Titulo", max_length=64, default=current_author)
     title = models.CharField(u"Titulo", max_length=255)
     content = models.TextField(u"Contenido")
     image = models.ImageField(u"Imagen", upload_to='news-images', null=True, blank=True)

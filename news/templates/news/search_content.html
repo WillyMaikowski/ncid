@@ -1,6 +1,37 @@
 {% extends "news/base.html" %}
+{% load staticfiles %}
 
+{% block head %}
+    <script src="{% static 'news/js/content.js' %}" ></script>
+    <script src="{% static 'news/js/search.js' %}" ></script>
+{% endblock %}
 {% block content %}
-    TODO: Buscar contenido
+
+<div>
+    <label for="search-term">Buscar Contenido:</label>
+    <input type="text" id="search-term" onkeyup="searcher.termChanged()">
+
+    <label for="search-category">Categoria:</label>
+    <select id="search-category">
+        <option value="title">Titulo</title>
+        <option value="date">Fecha</title>
+    </select>
+</div>
+
+<table id="search-results">
+    <thead>
+        <tr>
+            <th>Titulo</th>
+            <th>Tipo</th>
+            <th>Autor</th>
+            <th>Inicio Circulación</th>
+            <th>Fin Circulación</th>
+            <th>Publicado</th>
+        </tr>
+    </thead>
+    <tbody>
+    </body>
+</table>
+
 {% endblock %}
 

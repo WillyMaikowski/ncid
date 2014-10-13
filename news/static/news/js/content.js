@@ -44,6 +44,53 @@ var SlideTemplates = new function() {
     });
 }
 
+// The event object class.
+function ContentEvent() {
+    this.id = null;
+    this.author = 'unknown';
+    this.title = 'Titulo de evento';
+    this.lecturer = 'El Charlista';
+    this.date = 'Fecha de evento';
+    this.start_time = 'Hora de comienzo';
+    this.end_time = 'Hora de termino';
+    this.published = false;
+
+    this.contentType = function() {
+        return 'Evento';
+    }
+
+    // This method gives the REST url of the slide
+    this.url = function() {
+        return BaseURL + "event/" + this.id + "/";
+    }
+    this.editUrl = function() {
+        return this.url() + 'edit';
+    }
+
+    // Reads the event data from the json.
+    this.readData = function(data) {
+        var fields = data.fields;
+        this.id = data.pk;
+        this.author = fields.author;
+        this.title = fields.title;
+        this.lecturer = fields.lecturer;
+        this.date = localFormatDate(new Date(fields.date));
+        this.start_time = fields.start_time;
+        this.end_time = fields.end_time;
+    }
+
+    // Circulation start.
+    this.circulationStart = function() {
+        return this.date + " " + this.start_time;
+    }
+
+    // Circulation end
+    this.circulationEnd = function() {
+        return this.date + " " + this.end_time;
+    }
+}
+
+
 // The content slide view class
 function ContentSlideView(model) {
     var self = this;
@@ -85,14 +132,10 @@ function ContentSlideView(model) {
     };
 }
 
-// Formats a date for the current localization.
-function localFormatDate(date) {
-    return $.datepicker.formatDate("dd-mm-yy", date);
-}
-
 // The content slide class.
 function ContentSlide() {
     this.id = null;
+    this.author = 'unknown';
     this.title = "Titulo";
     this.text = "Contenido";
     this.image = null;
@@ -106,6 +149,10 @@ function ContentSlide() {
 
     this.view = new ContentSlideView(this);
 
+    this.contentType = function() {
+        return 'Contenido';
+    }
+
     // This method gives the REST url of the slide
     this.url = function() {
         return BaseURL + "content/" + this.id + "/";
@@ -115,32 +162,20 @@ function ContentSlide() {
     }
 
     this.readData = function(data) {
-        // Helper functions for converting the dates.
-        function formatDate(datetime) {
-            return $.datepicker.formatDate('dd-mm-yy', datetime);
-        }
-
-        function numberFormat(number) {
-            if(number < 10)
-                return '0' + number;
-            return number;
-        }
-
-        function formatTime(datetime) {
-            return numberFormat(datetime.getHours()) + ':' + numberFormat(datetime.getMinutes());
-        }
-
         var fields = data.fields;
+        this.id = data.pk;
+
+        this.author = fields.author;
         this.title = fields.title;
         this.text = fields.content;
         this.image = fields.image;
 
         var startDateTime = new Date(fields.circulation_start);
-        this.start_date = formatDate(startDateTime);
+        this.start_date = localFormatDate(startDateTime);
         this.start_time = formatTime(startDateTime);
 
         var endDateTime = new Date(fields.circulation_end);
-        this.end_date = formatDate(endDateTime);
+        this.end_date = localFormatDate(endDateTime);
         this.end_time = formatTime(endDateTime);
 
         this.display_duration = fields.display_duration;
@@ -149,7 +184,6 @@ function ContentSlide() {
 
         if(this.image.length == 0)
             this.image = null;
-        console.log(this);
     }
 
     // This method encodes the slide into a simpler object for posting.
@@ -173,5 +207,27 @@ function ContentSlide() {
         this.view.update();
         container.append(this.view.mainElement);
     }
+
+    // Circulation start.
+    this.circulationStart = function() {
+        return this.start_date + " " + this.start_time;
+    }
+
+    // Circulation end
+    this.circulationEnd = function() {
+        return this.end_date + " " + this.end_time;
+    }
 }
 
+function readContentArray(contents) {
+    var ModelMap = {
+        'news.event': ContentEvent,
+        'news.slide': ContentSlide
+    };
+
+    return contents.map(function(content) {
+        var obj = new ModelMap[content.model] ();
+        obj.readData(content);
+        return obj;
+    });
+}

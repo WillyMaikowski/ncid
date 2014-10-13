@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Event URLs
     url(r'^event/add$', views.add_event, name='add_event'),
     url(r'^event/all$', views.all_events, name='all_events'),
-    url(r'^event/(?P<event_id>\d+)/$', views.edit_event, name='edit_event'),
+    url(r'^event/(?P<event_id>\d+)/edit$', views.edit_event, name='edit_event'),
     url(r'^event/currents$', views.current_events, name='current_events'),
 
     # Alert URLs

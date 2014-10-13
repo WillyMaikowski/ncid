@@ -10,7 +10,7 @@ $(document).ready(function() {
     
     $( ".dateInput" ).each(function() {
         $(this).datepicker({
-            dateFormat: 'dd-mm-yy',
+            dateFormat: 'dd/mm/yy',
         });
     });
 });
@@ -44,4 +44,20 @@ $.ajaxSetup({
         }
     }
 });
+
+// Helper functions for converting the dates.
+function numberFormatForTime(number) {
+    if(number < 10)
+        return '0' + number;
+    return number;
+}
+
+function formatTime(datetime) {
+    return numberFormatForTime(datetime.getHours()) + ':' + numberFormatForTime(datetime.getMinutes());
+}
+
+// Formats a date for the current localization.
+function localFormatDate(date) {
+    return $.datepicker.formatDate("dd/mm/yy", date);
+}
 

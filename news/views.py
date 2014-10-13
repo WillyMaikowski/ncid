@@ -17,7 +17,7 @@ from news.models import Alert, Template, Event, Slide
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('creation_timestamp',)
+        exclude = ('author', 'creation_timestamp',)
         widgets = {
             'date' : forms.DateInput(attrs = {'class': 'dateInput'}),
             'start_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
@@ -163,7 +163,7 @@ def search_content_by_title(term):
     return list(chain(events, slides))
 
 def search_content_by_date(term):
-    parsedDate = datetime.strptime(term, '%d-%m-%Y').date()
+    parsedDate = datetime.strptime(term, '%d/%m/%Y').date()
     events = Event.objects.filter(date__startswith=parsedDate).order_by('-date', '-start_time')
     slides = Slide.objects.filter(circulation_start__startswith=parsedDate).order_by('-circulation_start')
     return list(chain(events, slides))
@@ -207,7 +207,7 @@ def search_content_query_json(request):
     try:
         queryResult = dispatch_search_content_query(category, search_term)
         return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
-    except ValueError:
+    except (KeyError, ValueError):
         return HttpResponse("[]", content_type="application/json")
     
 
