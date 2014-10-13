@@ -155,13 +155,35 @@ def news_display(request):
     context = {}
     return render(request, 'news/news_display.html', context)
 
+
+# Content searches
+def search_content_by_title(term):
+    return Slide.objects.all()
+
+def search_content_by_date(term):
+    return Slide.objects.all()
+
+def dispatch_search_content_query(category, search_term):
+    SearchMethods =  {
+        'title' : search_content_by_title,
+        'date' : search_content_by_date,
+    }
+
+    return SearchMethods[category] (search_term)
+
 # Methods used via AJAX
-def get_content(request, content_id):
-    content = Slide.objects.get(pk=content_id)
-    return HttpResponse(serializers.serialize("json", [content]), content_type="application/json")
+def all_events(request):
+    return HttpResponse(serializers.serialize("json", Event.objects.all()), content_type="application/json")    
+
+def all_contents(request):
+    return HttpResponse(serializers.serialize("json", Slide.objects.all()), content_type="application/json")    
 
 def all_slide_templates(request):
     return HttpResponse(serializers.serialize("json", Template.objects.all()), content_type="application/json")
+
+def get_content(request, content_id):
+    content = Slide.objects.get(pk=content_id)
+    return HttpResponse(serializers.serialize("json", [content]), content_type="application/json")
 
 def current_events(request):
     return HttpResponse(serializers.serialize("json", Event.current_events()), content_type="application/json")
@@ -171,4 +193,11 @@ def current_alerts(request):
 
 def current_slides(request):
     return HttpResponse(serializers.serialize("json", Slide.current_slides()), content_type="application/json")
+
+def search_content_query_json(request):
+    category = request.GET['category']
+    search_term = request.GET['term']
+
+    queryResult = dispatch_search_content_query(category, search_term)
+    return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
 
