@@ -56,5 +56,5 @@ class Slide(models.Model):
     @classmethod
     def current_slides(cls):
         now = timezone.now()
-        return cls.objects.filter(circulation_start__lte = now, circulation_end__gte = now)
+        return cls.objects.filter(circulation_start__lte = now, circulation_end__gte = now).order_by('-circulation_start')
 

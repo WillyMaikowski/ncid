@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.utils import timezone
 
 from datetime import *
-
+from itertools import chain
 from news.models import Alert, Template, Event, Slide
 
 # Forms
@@ -158,10 +158,16 @@ def news_display(request):
 
 # Content searches
 def search_content_by_title(term):
-    return Slide.objects.all()
+    events = Event.objects.filter(title__icontains=term).order_by('-date', '-start_time')
+    slides = Slide.objects.filter(title__icontains=term).order_by('-circulation_start')
+    return list(chain(events, slides))
 
 def search_content_by_date(term):
-    return Slide.objects.all()
+    parsedDate = datetime.strptime(term, '%d-%m-%Y').date()
+    events = Event.objects.filter(date__startswith=parsedDate).order_by('-date', '-start_time')
+    slides = Slide.objects.filter(circulation_start__startswith=parsedDate).order_by('-circulation_start')
+    return list(chain(events, slides))
+
 
 def dispatch_search_content_query(category, search_term):
     SearchMethods =  {
@@ -198,6 +204,10 @@ def search_content_query_json(request):
     category = request.GET['category']
     search_term = request.GET['term']
 
-    queryResult = dispatch_search_content_query(category, search_term)
-    return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
+    try:
+        queryResult = dispatch_search_content_query(category, search_term)
+        return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
+    except ValueError:
+        return HttpResponse("[]", content_type="application/json")
+    
 
