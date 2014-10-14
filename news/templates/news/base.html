@@ -12,11 +12,13 @@
         <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
         <script src="{% static 'news/js/datepicker-es.js' %}" ></script>
         <script src="{% static 'news/js/edition-common.js' %}" ></script>
+        <script src="{% static 'news/js/content.js' %}" ></script>
         {% block head %}{% endblock %}
     </head>
     <body>
         <!-- The header with the navigaton bar -->
         <header>
+            <a id=close-session" href="{% url 'logout'%}" >Cerrar Session</a>
             <h1>Bienvenido al Sistema de Noticias</h1>
             <nav>
                 <a href="{% url 'news_display'%}" target="_blank">Pantalla de Noticias</a>

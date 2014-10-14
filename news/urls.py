@@ -28,6 +28,10 @@ urlpatterns = patterns('',
     # Display URLs
     url(r'^display/$', views.news_display, name='news_display'),
 
+    # Login and logout URL
+    url(r'^login$', views.login_request, name='login'),
+    url(r'^logout$', views.logout_request, name='logout'),
+
     # Index
     url(r'^$', views.index, name='index')
 )

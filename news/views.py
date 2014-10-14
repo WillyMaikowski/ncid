@@ -8,10 +8,14 @@ from django.shortcuts import render
 from django import forms
 from django.core.urlresolvers import reverse
 from django.utils import timezone
+from django.contrib.auth import authenticate, login, logout
 
 from datetime import *
 from itertools import chain
 from news.models import Alert, Template, Event, Slide
+from django.contrib.auth.decorators import user_passes_test
+
+LoginURL = '/news/login'
 
 # Forms
 class EventForm(forms.ModelForm):
@@ -64,16 +68,48 @@ class SlideForm(forms.Form):
         if event_id != None:
             slide.associated_event = Event.objects.get(pk=event_id)
 
+# Tells if the user has edition permissions.
+def user_can_edit(user):
+    return user.is_authenticated() and user.has_perm('news.content_edition')
+
+# Login and logout
+def login_request(request):
+    message = ''
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return HttpResponseRedirect(reverse('index'))
+            else:
+                message = "Cuenta desactivada."
+        else:
+            message = "Nombre de usuario o contraseña invalido."
+
+    context = {'message': message}
+    return render(request, 'news/login.html', context)
+
+def logout_request(request):
+    logout(request)
+    context = {'message' : 'Sesion cerrada con exito.'}
+    return render(request, 'news/login.html', context)
+
 # Pages used by the client.
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def index(request):
     context = {}
     return render(request, 'news/index.html', context)
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def add_event(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            event = form.save()
+            event = form.save(commit=False)
+            event.author = request.user.username
+            event.save()
             return HttpResponseRedirect(reverse('edit_event', kwargs={'event_id': event.pk }))
     else:
         form = EventForm()
@@ -81,6 +117,7 @@ def add_event(request):
     context = {'form' : form}
     return render(request, 'news/add_event_form.html', context)
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def edit_event(request, event_id):
     event = Event.objects.get(pk=event_id)
     if request.method == 'POST':
@@ -104,6 +141,7 @@ def edit_event(request, event_id):
     return render(request, 'news/edit_event_form.html', context)
 
 @ensure_csrf_cookie
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def edit_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     if request.method == 'POST':
@@ -125,19 +163,23 @@ def edit_content(request, content_id):
     context = {'content' : content}
     return render(request, 'news/edit_content.html', context)
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def add_content(request):
     content = Slide()
     content.title = 'Borrador Sin Titulo'
     content.content = 'Borrador'
     content.template = Template.objects.all()[0]
+    content.author = request.user.username
     content.save()
 
     return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def search_content(request):
     context = {}
     return render(request, 'news/search_content.html', context)
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def news_display(request):
     context = {}
     return render(request, 'news/news_display.html', context)
@@ -164,18 +206,33 @@ def dispatch_search_content_query(category, search_term):
     return SearchMethods[category] (search_term)
 
 # Methods used via AJAX
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def all_events(request):
     return HttpResponse(serializers.serialize("json", Event.objects.all()), content_type="application/json")    
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def all_contents(request):
     return HttpResponse(serializers.serialize("json", Slide.objects.all()), content_type="application/json")    
 
-def all_slide_templates(request):
-    return HttpResponse(serializers.serialize("json", Template.objects.all()), content_type="application/json")
-
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def get_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     return HttpResponse(serializers.serialize("json", [content]), content_type="application/json")
+
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def search_content_query_json(request):
+    category = request.GET['category']
+    search_term = request.GET['term']
+
+    try:
+        queryResult = dispatch_search_content_query(category, search_term)
+        return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
+    except (KeyError, ValueError):
+        return HttpResponse("[]", content_type="application/json")
+    
+# Public AJAX methods
+def all_slide_templates(request):
+    return HttpResponse(serializers.serialize("json", Template.objects.all()), content_type="application/json")
 
 def current_events(request):
     return HttpResponse(serializers.serialize("json", Event.current_events()), content_type="application/json")
@@ -187,16 +244,5 @@ def current_slides(request):
     return HttpResponse(serializers.serialize("json", Slide.current_slides()), content_type="application/json")
 
 def current_drafts(request):
-    return HttpResponse(serializers.serialize("json", Slide.current_drafts()), content_type="application/json")
-
-def search_content_query_json(request):
-    category = request.GET['category']
-    search_term = request.GET['term']
-
-    try:
-        queryResult = dispatch_search_content_query(category, search_term)
-        return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
-    except (KeyError, ValueError):
-        return HttpResponse("[]", content_type="application/json")
-    
+    return HttpResponse(serializers.serialize("json", Slide.current_drafts(request.user)), content_type="application/json")
 

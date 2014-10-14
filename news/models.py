@@ -66,7 +66,12 @@ class Slide(models.Model):
         return cls.objects.filter(published=True, circulation_start__lte = now, circulation_end__gte = now).order_by('-circulation_start')
 
     @classmethod
-    def current_drafts(cls):
+    def current_drafts(cls, user):
         now = timezone.now()
-        return cls.objects.filter(draft = True).order_by('-creation_date')
+        return cls.objects.filter(draft = True, author = user.username).order_by('-creation_date')
+
+    class Meta:
+        permissions = (
+            ("content_edition", "Can perform content edition"),
+        )
 
