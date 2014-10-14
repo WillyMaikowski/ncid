@@ -99,12 +99,15 @@ def logout_request(request):
 # Pages used by the client.
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def index(request):
-    context = {}
-    return render(request, 'news/index.html', context)
+    return HttpResponseRedirect(reverse('search_content'))
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def add_event(request):
     if request.method == 'POST':
+        # Check if cancel.
+        if 'cancel' in request.POST:
+            return HttpResponseRedirect(reverse('index'))
+
         form = EventForm(request.POST)
         if form.is_valid():
             event = form.save(commit=False)
@@ -121,6 +124,10 @@ def add_event(request):
 def edit_event(request, event_id):
     event = Event.objects.get(pk=event_id)
     if request.method == 'POST':
+        # Check if cancel.
+        if 'cancel' in request.POST:
+            return HttpResponseRedirect(reverse('index'))
+
         # Check if deleting.
         if 'delete' in request.POST:
             event.delete()
