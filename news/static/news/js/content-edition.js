@@ -160,7 +160,8 @@ function ContentEditor() {
 
     // The autosave keeps the current draft flag.
     this.autosave = function() {
-        this.performSave(this.contentSlide.draft);
+        if(this.contentSlide.draft)
+            this.performSave(this.contentSlide.draft);
     }
 
     // The save button removes the draft flag.
@@ -190,7 +191,11 @@ function ContentEditor() {
             if(self.isNewContent) {
                 self.contentSlide.id = result.id;
                 window.location = self.contentSlide.editUrl();
+                return;
             }
+
+            // Update the draft bar
+            draftBar.load();
         });
     }
 

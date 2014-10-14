@@ -93,7 +93,9 @@ function DraftBar() {
 
     // Load when the document is ready.
     $(document).ready(function() {
-        setInterval(function(){self.load()}, RefreshInterval);
+        SlideTemplates.load(function() {
+            self.load();
+        });
     })
 }
 
