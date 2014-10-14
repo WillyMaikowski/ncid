@@ -7,18 +7,31 @@
 {% endblock %}
 {% block content %}
 
-<div>
-    <label for="search-term">Buscar Contenido:</label>
-    <input type="text" id="search-term" onkeyup="searcher.termChanged()">
-
-    <label for="search-category">Categoria:</label>
-    <select id="search-category">
-        <option value="title">Titulo</title>
-        <option value="date">Fecha</title>
-    </select>
+<div class="jumbotron">
+    <h2>Bienvenido!</h2>
+    <p>Este es el sitio de administracion de noticias del 
+departamento. En esta pagina podra buscar contenido. Si desea agregar, 
+ocupe el menu superior.</p>
 </div>
 
-<table id="search-results">
+<div>
+    <div class="col-xs-4">
+        <div class="input-group">
+            <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+            <input class="form-control input-sm" placeholder="Busqueda" type="text" id="search-term" onkeyup="searcher.termChanged()">
+        </div>
+    </div>
+
+    <div class="pull-left text-right">
+        <label for="search-category">Categoria:</label>
+        <select id="search-category">
+            <option value="title">Titulo</title>
+            <option value="date">Fecha</title>
+        </select>
+    </div>
+</div>
+
+<table id="search-results" class="table table-bordered">
     <thead>
         <tr>
             <th>Titulo</th>

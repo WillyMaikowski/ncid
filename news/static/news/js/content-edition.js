@@ -202,7 +202,9 @@ function ContentEditor() {
     this.preview = function() {
     }
     this.cancel = function() {
-        window.location = IndexURL;
+        $.post(this.saveURL(), {cancel:true}, function(result) {
+            window.location = IndexURL;
+        });
     }
     this.showValidationErrors = function(errors) {
         console.log(errors);

@@ -88,12 +88,13 @@ def login_request(request):
         else:
             message = "Nombre de usuario o contraseña invalido."
 
-    context = {'message': message}
+    context = {'error_message': message, 'notify_message': ''}
     return render(request, 'news/login.html', context)
 
 def logout_request(request):
     logout(request)
     context = {'message' : 'Sesion cerrada con exito.'}
+    context = {'error_message': '', 'notify_message': 'Sesion cerrada con exito.'}
     return render(request, 'news/login.html', context)
 
 # Pages used by the client.
@@ -152,6 +153,12 @@ def edit_event(request, event_id):
 def edit_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     if request.method == 'POST':
+        # Check if canceling a draft.
+        if 'cancel' in request.POST:
+            if content.draft:
+                content.delete()
+            return HttpResponse(json.dumps({'accepted': True}))
+
         form = SlideForm(request.POST)
         response = {}
 
