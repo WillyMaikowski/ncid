@@ -20,16 +20,20 @@ class Event(models.Model):
     title = models.CharField(u"Titulo", max_length=255)
     lecturer = models.CharField(u"Charlista", max_length=100)
     place = models.CharField(u"Lugar", max_length=255)
-    date = models.DateField(u"Fecha")
+    date = models.DateField(u"Fecha", default=timezone.now)
     start_time = models.TimeField(u"Hora de comienzo")
     end_time = models.TimeField(u"Hora de fin")
+
+    circulation_start = models.DateTimeField(u"Comienzo de circulación", default=timezone.now)
+    circulation_end = models.DateTimeField(u"Fin de circulación", default=timezone.now)
+
     published = models.BooleanField(u"Publicado", default=False)
     creation_timestamp = models.DateTimeField(u"Fecha y hora de Creación", default=timezone.now)
 
     @classmethod
     def current_events(cls):
         now = timezone.now()
-        return cls.objects.filter(published=True, date = now.date(), end_time__gte = now.time()).order_by('date', 'start_time')
+        return cls.objects.filter(published=True, circulation_start__lte = now.date(), circulation_start__gte = now.time()).order_by('date', 'start_time')
 
     def __unicode__(self):
         return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)

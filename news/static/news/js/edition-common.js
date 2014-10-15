@@ -7,8 +7,23 @@ $(document).ready(function() {
     // Setup some widgets.
     $( ".dateInput" ).each(function() {
         $(this).attr("data-date-format", "DD/MM/YYYY")
+                .datetimepicker({
+                pickTime: false
+        });
+    });
+
+    $( ".dateTimeInput" ).each(function() {
+        $(this).attr("data-date-format", "DD/MM/YYYY HH:mm")
                 .datetimepicker();
     });
+
+    $( ".timeInput" ).each(function() {
+        $(this).attr("data-date-format", "HH:mm")
+                .datetimepicker({
+                pickDate: false
+        });
+    });
+
 });
 
 // Cross site request forgery protection for Django. https://docs.djangoproject.com/en/dev/ref/contrib/csrf/
@@ -57,6 +72,11 @@ function localFormatDate(date) {
     // Hack: Use something more proper
     return numberFormatForTime(date.getDay()) + '/' + numberFormatForTime(date.getMonth()) + '/' + numberFormatForTime(date.getFullYear());
 }
+
+function localFormatDateTime(datetime) {
+    return localFormatDate(datetime) + " " + formatTime(datetime);
+}
+
 
 // Draft bar
 function DraftBar() {

@@ -54,6 +54,8 @@ function ContentEvent() {
     this.date = 'Fecha de evento';
     this.start_time = 'Hora de comienzo';
     this.end_time = 'Hora de termino';
+    this.circulation_start = new Date(Date.now());
+    this.circulation_end = new Date(Date.now())
     this.published = false;
 
     this.contentType = function() {
@@ -78,16 +80,18 @@ function ContentEvent() {
         this.date = localFormatDate(new Date(fields.date));
         this.start_time = fields.start_time;
         this.end_time = fields.end_time;
+        this.circulation_start = new Date(fields.circulation_start);
+        this.circulation_end = new Date(fields.circulation_end);
     }
 
     // Circulation start.
     this.circulationStart = function() {
-        return this.date + " " + this.start_time;
+        return localFormatDateTime(this.circulation_start);
     }
 
     // Circulation end
     this.circulationEnd = function() {
-        return this.date + " " + this.end_time;
+        return localFormatDateTime(this.circulation_end);
     }
 }
 
@@ -229,3 +233,5 @@ function readContentArray(contents) {
         return obj;
     });
 }
+
+

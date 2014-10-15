@@ -51,6 +51,23 @@ USE_TZ = True
 # Date formats
 DATE_INPUT_FORMATS = ('%d/%m/%Y', '%Y-%m-%d', '%d/%m/%y')
 
+DATETIME_INPUT_FORMATS = (
+    '%d/%m/%Y %H:%M:%S',
+    '%d/%m/%Y %H:%M:%S.%f',
+    '%d/%m/%Y %H:%M',
+    '%d/%m/%Y',
+
+    '%d/%m/%y %H:%M:%S',
+    '%d/%m/%y %H:%M:%S.%f',
+    '%d/%m/%y %H:%M',
+    '%d/%m/%y',
+
+    '%Y-%m-%d %H:%M:%S',
+    '%Y-%m-%d %H:%M:%S.%f',
+    '%Y-%m-%d %H:%M',
+    '%Y-%m-%d'
+)
+
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
 MEDIA_ROOT = '/home/ronie/Projects/ncid/media'

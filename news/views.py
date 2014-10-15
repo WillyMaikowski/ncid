@@ -26,6 +26,8 @@ class EventForm(forms.ModelForm):
             'date' : forms.DateInput(attrs = {'class': 'dateInput'}),
             'start_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
             'end_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
+            'circulation_start' : forms.DateTimeInput(attrs = {'class': 'dateTimeInput'}),
+            'circulation_end' : forms.DateTimeInput(attrs = {'class': 'dateTimeInput'}),
         }
 
 class UploadImageForm(forms.Form):
