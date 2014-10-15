@@ -40,11 +40,8 @@ class SlideForm(forms.Form):
     image = forms.ImageField(label=u"Imagen", required=False)
     template = forms.IntegerField()
 
-    start_date = forms.DateField(label=u"Comienzo de circulación")
-    start_time = forms.TimeField(label=u"Hora del comienzo de circulación")
-
-    end_date = forms.DateField(label=u"Fin de circulación")
-    end_time = forms.TimeField(label=u"Hora del fin de circulación")
+    circulation_start = forms.DateTimeField(label=u"Comienzo de circulación")
+    circulation_end = forms.DateTimeField(label=u"Fin de circulación")
 
     display_duration = forms.FloatField(label=u"Tiempo en pantalla")
     published = forms.BooleanField(label=u"Publicado", required=False)
@@ -59,8 +56,8 @@ class SlideForm(forms.Form):
         slide.image = data['image']
 
         tz = timezone.get_default_timezone()
-        slide.circulation_start = timezone.make_aware(datetime.combine(data['start_date'], data['start_time']), tz)
-        slide.circulation_end = timezone.make_aware(datetime.combine(data['end_date'], data['end_time']), tz)
+        slide.circulation_start = data['circulation_start']
+        slide.circulation_end = data['circulation_end']
 
         slide.display_duration = data['display_duration']
         slide.published = data['published']

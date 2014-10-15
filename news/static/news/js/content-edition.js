@@ -144,18 +144,14 @@ function ContentEditor() {
 
     // This method stores the 
     this.storeMetadata = function() {
-        this.contentSlide.start_date = $("#start-date").val();
-        this.contentSlide.start_time = $("#start-time").val();
-        this.contentSlide.end_date = $("#end-date").val();
-        this.contentSlide.end_time = $("#end-time").val();
+        this.contentSlide.circulation_start = $("#circulation-start").val();
+        this.contentSlide.circulation_end = $("#circulation-end").val();
         this.contentSlide.published = $("#published").is(":checked");
     }
 
     this.loadMetadata = function() {
-        $("#start-date").val(this.contentSlide.start_date);
-        $("#start-time").val(this.contentSlide.start_time);
-        $("#end-date").val(this.contentSlide.end_date);
-        $("#end-time").val(this.contentSlide.end_time);
+        $("#circulation-start").val(this.contentSlide.circulationStart());
+        $("#circulation-end").val(this.contentSlide.circulationEnd());
         $("#published").prop("checked", this.contentSlide.published);
         this.updateContentCharacterCount();
     }

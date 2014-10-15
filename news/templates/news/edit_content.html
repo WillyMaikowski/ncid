@@ -93,11 +93,9 @@
 {% block footer %}
 <div id="contentStatusBar">
     <span>Inicio Circulación:</span>
-    <input type="text" id="start-date" class="dateInput">
-    <input type="text" id="start-time" class="timeInput">
+    <input type="text" id="circulation-start" class="dateTimeInput">
     <span>Fin Circulación:</span>
-    <input type="text" id="end-date" class="dateInput">
-    <input type="text" id="end-time" class="timeInput" >
+    <input type="text" id="circulation-end" class="dateTimeInput">
     <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()" >Publicado
     <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
     <input type="submit" value="Guardar" onclick="contentEditor.save()">

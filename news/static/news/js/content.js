@@ -138,10 +138,8 @@ function ContentSlide() {
     this.title = "Titulo";
     this.text = "Contenido";
     this.image = null;
-    this.start_date = localFormatDate(new Date(Date.now()));
-    this.start_time = "00:00";
-    this.end_date = localFormatDate(new Date(Date.now()));
-    this.end_time = "23:59";
+    this.circulation_start = new Date(Date.now())
+    this.circulation_end = new Date(Date.now())
     this.published = false;
     this.display_duration = 15.0;
     this.template = null;
@@ -170,13 +168,8 @@ function ContentSlide() {
         this.text = fields.content;
         this.image = fields.image;
 
-        var startDateTime = new Date(fields.circulation_start);
-        this.start_date = localFormatDate(startDateTime);
-        this.start_time = formatTime(startDateTime);
-
-        var endDateTime = new Date(fields.circulation_end);
-        this.end_date = localFormatDate(endDateTime);
-        this.end_time = formatTime(endDateTime);
+        this.circulation_start = moment(fields.circulation_start).toDate();
+        this.circulation_end = moment(fields.circulation_end).toDate();
 
         this.display_duration = fields.display_duration;
         this.published = fields.published;
@@ -193,10 +186,8 @@ function ContentSlide() {
             title: this.title,
             text: this.text,
             image: this.image,
-            start_date: this.start_date,
-            start_time: this.start_time,
-            end_date: this.end_date,
-            end_time: this.end_time,
+            circulation_start: this.circulation_start,
+            circulation_end: this.circulation_end,
             published: this.published,
             draft: this.draft,
             display_duration: this.display_duration,
@@ -212,12 +203,12 @@ function ContentSlide() {
 
     // Circulation start.
     this.circulationStart = function() {
-        return this.start_date + " " + this.start_time;
+        return localFormatDateTime(this.circulation_start);
     }
 
     // Circulation end
     this.circulationEnd = function() {
-        return this.end_date + " " + this.end_time;
+        return localFormatDateTime(this.circulation_end);
     }
 }
 

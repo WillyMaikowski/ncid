@@ -70,7 +70,7 @@ function formatTime(datetime) {
 // Formats a date for the current localization.
 function localFormatDate(date) {
     // Hack: Use something more proper
-    return numberFormatForTime(date.getDay()) + '/' + numberFormatForTime(date.getMonth()) + '/' + numberFormatForTime(date.getFullYear());
+    return numberFormatForTime(date.getDate()) + '/' + numberFormatForTime(date.getMonth() + 1) + '/' + numberFormatForTime(date.getFullYear());
 }
 
 function localFormatDateTime(datetime) {
