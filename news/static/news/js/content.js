@@ -1,5 +1,6 @@
 // The application base URL.
 var BaseURL = '/news/';
+var MediaBaseURL = '/media/';
 var TemplatesURL = BaseURL + 'slide-templates/all';
 var BlankImage = BaseURL + 'style/images/missing-image.png';
 
@@ -109,7 +110,7 @@ function ContentSlideView(model) {
         this.title.html(this.model.title);
         this.text.html(this.model.text);
         if(model.image != null)
-            this.image.attr("src", this.model.image);
+            this.image.attr("src", MediaBaseURL + this.model.image);
         else
             this.image.attr("src", BlankImage);
     };
@@ -118,12 +119,6 @@ function ContentSlideView(model) {
     this.updateModel = function () {
         this.model.title = this.title.html();       
         this.model.text = this.text.html();
-
-        var image = this.image.attr("src");
-        if(image != BlankImage)
-            this.model.image = image;
-        else
-            this.model.image = null;
     };
 
     // Change the slide class.

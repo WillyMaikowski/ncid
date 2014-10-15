@@ -61,6 +61,28 @@
   </div>
 </div>
 
+<!-- Image Upload Dialog -->
+<div class="modal fade" id="imageUploadModal" tabindex="-1" role="dialog" aria-labelledby="imageUploadModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title" id="imageUploadModalLabel">Subir Imagen</h4>
+      </div>
+      <div class="modal-body">
+        <form action="{% url 'upload_content_image' content_id=content.pk %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="file" name="image" accept="image/*">
+            <input type="submit" value="enviar">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="imageUploadModalClose" data-dismiss="modal">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% block initEditor %}
 <script>
     $(document).ready(function() {contentEditor.loadContent({{ content.pk }}); })

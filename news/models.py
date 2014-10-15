@@ -46,7 +46,7 @@ class Slide(models.Model):
     author = models.CharField(u"Titulo", max_length=64, default=current_author)
     title = models.CharField(u"Titulo", max_length=255)
     content = models.TextField(u"Contenido")
-    image = models.ImageField(u"Imagen", upload_to='news-images', null=True, blank=True)
+    image = models.ImageField(u"Imagen", upload_to='news-images/%Y/%m/%d', null=True, blank=True)
     template = models.ForeignKey(Template)
 
     circulation_start = models.DateTimeField(u"Comienzo de circulación", default=timezone.now)

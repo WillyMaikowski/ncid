@@ -28,6 +28,10 @@ class EventForm(forms.ModelForm):
             'end_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
         }
 
+class UploadImageForm(forms.Form):
+    image = forms.ImageField()
+
+
 class SlideForm(forms.Form):
     title = forms.CharField(label=u"Titulo", max_length=255)
     text = forms.CharField(label=u"Texto")
@@ -176,6 +180,22 @@ def edit_content(request, content_id):
 
     context = {'content' : content}
     return render(request, 'news/edit_content.html', context)
+
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def upload_content_image(request, content_id):
+    content = Slide.objects.get(pk=content_id)
+    response = {'accepted': False}
+    if request.method == 'POST':
+        print 'Post image ' , request.POST
+        print 'File image ' , request.FILES
+        form = UploadImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            print 'Post valid'
+            content.image = request.FILES['image']
+            content.save();
+            response = {'accepted': True}
+
+    return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def add_content(request):

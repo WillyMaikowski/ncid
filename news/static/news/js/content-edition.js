@@ -90,6 +90,10 @@ function ContentEditor() {
         view.text.attr("contenteditable", true);
         view.text.keydown("input", this.onTextKeyDown);
         view.text.on("blur paste input", this.onTextChanged);
+
+        view.image.click(function() {
+            $('#imageUploadModal').modal();
+        })
     }
 
     // This opens the template selection dialog.
