@@ -76,7 +76,7 @@
     <span>Fin Circulación:</span>
     <input type="text" id="end-date" class="dateInput">
     <input type="text" id="end-time" >
-    <input type="checkbox" id="published">Publicado
+    <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()" >Publicado
     <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
     <input type="submit" value="Guardar" onclick="contentEditor.save()">
     <input type="submit" value="Cancelar" onclick="contentEditor.cancel()">

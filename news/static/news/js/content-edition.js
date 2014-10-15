@@ -201,6 +201,11 @@ function ContentEditor() {
 
     this.preview = function() {
     }
+
+    this.publishedChanged = function() {
+        this.autosave();
+    }
+
     this.cancel = function() {
         $.post(this.saveURL(), {cancel:true}, function(result) {
             window.location = IndexURL;
