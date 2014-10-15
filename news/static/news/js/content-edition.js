@@ -209,6 +209,28 @@ function ContentEditor() {
     this.showValidationErrors = function(errors) {
         console.log(errors);
     }
+
+    // Register the event handlers.
+    this.templateSelectionAction = function(value) {
+        console.log("selection Action " + value)
+    }
+
+    this.registerTemplateSelectionAction = function() {
+        var self = this;
+        var accepted = false;
+        $('#selectTemplateModal').on('hide.bs.modal', function(e) {
+            self.templateSelectionAction(accepted);
+        })
+
+        $("#selectTemplateCancel").click(function() {
+            accepted = false;
+        });
+
+        $("#selectTemplateOK").click(function() {
+            accepted = true;
+        });
+
+    }
 }
 
 ContentEditor.prototype.performTemplateSelection = function() {
@@ -218,8 +240,9 @@ ContentEditor.prototype.performTemplateSelection = function() {
     var contentSection = $('#contentSection');
 
     // Template Selection dialog.
-    var dialog = $('<ol id="templateSelection" title="Seleccione una plantilla"></ol>"');
-    contentSection.append(dialog);
+    var dialog = $('#selectTemplateModal')
+    var dialogBody = $('#selectTemplateModalBody');
+    dialogBody.empty()
 
     // Add an element for each template
     var templates = SlideTemplates.all;
@@ -228,70 +251,67 @@ ContentEditor.prototype.performTemplateSelection = function() {
 
     var oldTemplate = this.contentSlide.template;
     var selectedTemplate = templates[0];
+    var selectionElements = [];
+
+    function templateClickHandlerFor(index) {
+        return function(event) {
+            selectedTemplate = templates[index];
+            for(var i = 0; i < selectionElements.length; ++i) {
+                if(index  == i)
+                    continue;
+                selectionElements[i].removeClass('active');
+            }
+        }
+    }
+
     for(var i = 0; i < templates.length; ++i) {
         // Create the template selection element.
         var template = templates[i];
-        var templateElement = $('<li class="ui-state-default"></li>');
+        var buttonElement = $('<button type="button" class="btn"></button>');
+        buttonElement.click(templateClickHandlerFor(i));
+
+        // Set the active attribute for the selected template.
+        if(template == oldTemplate)
+            buttonElement.addClass('active');
+
+        // Display the template using an image.
         var imageElement = $("<img></img>");
+        buttonElement.append(imageElement);
         imageElement.attr("alt", template.name);
         imageElement.attr("src", template.image_url);
-        templateElement.append(imageElement);
 
         // Add the element.
-        dialog.append(templateElement);
+        dialogBody.append(buttonElement);
+        selectionElements.push(buttonElement);
 
     }
-    dialog.selectable({
-        stop: function() {
-            $( ".ui-selected", this ).each(function() {
-                var index = $( "#templateSelection li" ).index( this );
-                selectedTemplate = templates[index];
-                self.useTemplate(selectedTemplate);
-            })
-        },
-
-        // Prevent multiple selection.Code snippet taken from:
-        // http://stackoverflow.com/questions/861668/how-to-prevent-multiple-selection-in-jquery-ui-selectable-plugin
-        selecting: function(event, ui) {
-            if( $(".ui-selected, .ui-selecting").length > 1) {
-                  $(ui.selecting).removeClass("ui-selecting");
-            }
-        
-        }
-    });
 
     // Open the dialog
-    dialog.dialog({
-        dialogClass: "no-close",
-        modal: true,
-        buttons: {
-            'Aceptar': function() {
-                // Set the selected template in the model.
-                self.contentSlide.template = selectedTemplate;
-
-                // This content is not new anymore.
-                self.isFirstTemplateBeingSelected = false;
-
-                // Close the dialog
-                $(this).dialog("close");
-                dialog.remove();
-            },
-            'Cancelar': function() {
-                // If this is a new content, just redirect to the index page.
-                if(self.isFirstTemplateBeingSelected) {
-                    window.location = BaseURL;
-                    return;
-                }
-
-                // Restore the old template.
-                self.useTemplate(oldTemplate);
-
-                // Close the dialog
-                $(this).dialog("close");
-                dialog.remove();
-            }
-        }
+    dialog.modal({
+        backdrop: 'static',
+        keyboard: false
     });
+
+    this.templateSelectionAction = function(result) {
+        if(result) {
+            // Set the selected template in the model.
+            self.contentSlide.template = selectedTemplate;
+
+            // This content is not new anymore.
+            self.isFirstTemplateBeingSelected = false;
+
+        }
+        else {
+            // If this is a new content, just redirect to the index page.
+            if(self.isFirstTemplateBeingSelected) {
+                window.location = BaseURL;
+                return;
+            }
+
+            // Restore the old template.
+            self.useTemplate(oldTemplate);
+        }
+    }
 }
 
 contentEditor = new ContentEditor();
@@ -320,5 +340,7 @@ $(document).ready(function() {
     });
 
     $( "#slide-template" ).button();
+
+    contentEditor.registerTemplateSelectionAction();
 });
 

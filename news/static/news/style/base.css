@@ -85,20 +85,20 @@ section.content {
     display: none;
 }
 
-.tango-icon-bold {
+.icon-tango-bold {
     background-image: url(icons/format-text-bold.png) !important;;
 
 }
-.tango-icon-italic {
+.icon-tango-italic {
     background-image: url(icons/format-text-italic.png) !important;;
 }
-.tango-icon-underline {
+.icon-tango-underline {
     background-image: url(icons/format-text-underline.png) !important;;
 }
-.tango-icon-undo {
+.icon-tango-undo {
     background-image: url(icons/edit-undo.png) !important;;
 }
-.tango-icon-redo {
+.icon-tango-redo {
     background-image: url(icons/edit-redo.png) !important;;
 }
 

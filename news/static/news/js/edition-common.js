@@ -5,14 +5,9 @@ var DraftURL = BaseURL + 'content/draft';
 // Setup some things when the DOM is ready.
 $(document).ready(function() {
     // Setup some widgets.
-    $( "#leftPanelAccordion" ).accordion({
-        heightStyle: "fill"
-    });
-    
     $( ".dateInput" ).each(function() {
-        $(this).datepicker({
-            dateFormat: 'dd/mm/yy',
-        });
+        $(this).attr("data-date-format", "DD/MM/YYYY")
+                .datetimepicker();
     });
 });
 
@@ -59,7 +54,8 @@ function formatTime(datetime) {
 
 // Formats a date for the current localization.
 function localFormatDate(date) {
-    return $.datepicker.formatDate("dd/mm/yy", date);
+    // Hack: Use something more proper
+    return numberFormatForTime(date.getDay()) + '/' + numberFormatForTime(date.getMonth()) + '/' + numberFormatForTime(date.getFullYear());
 }
 
 // Draft bar
@@ -81,7 +77,7 @@ function DraftBar() {
         var element = $( "<a></a>" );
         element.attr("href", content.editUrl());
         element.html(content.title);
-        block.append($( "<li></li>").append(element));
+        block.append($( "<tr></tr>").append( $("<td></td>").append(element)) );
     }
 
     // Reloads the drafts.

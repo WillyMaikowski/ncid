@@ -9,15 +9,16 @@
 
         <title>Sistemas de Noticias DCC</title>
 
-        <link rel="stylesheet" href="{% static 'news/style/bootstrap.css' %}">
+        <link rel="stylesheet" href="{% static 'news/style/bootstrap.css' %}" />
+        <link rel="stylesheet" href="{% static 'news/style/bootstrap-datetimepicker.min.css' %}" />
         <link rel="stylesheet" href="{% static 'news/style/base.css' %}" />
         <link rel="stylesheet" href="{% static 'news/style/slides.css' %}" />
-        <link rel="stylesheet" href="{% static 'news/style/jquery-ui.css' %}" />
 
         <script src="{% static 'news/js/jquery.min.js' %}" ></script>
-        <script src="{% static 'news/js/jquery-ui.min.js' %}" ></script>
-        <script src="{% static 'news/js/datepicker-es.js' %}" ></script>
+        <script src="{% static 'news/js/moment.js' %}"></script>
         <script src="{% static 'news/js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'news/js/bootstrap-datetimepicker.js' %}"></script>
+
         <script src="{% static 'news/js/edition-common.js' %}" ></script>
         <script src="{% static 'news/js/content.js' %}" ></script>
 
@@ -51,11 +52,19 @@
         </div>
 
         <!-- The left panel -->
-        <aside id="leftPanel">
-            <div id=leftPanelAccordion>
-                <h4>Borradores</h4>
-                <ol id="draftsBlock">
-                </ol>
+        <aside class="panel-group" id="leftPanel">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#draftsBlockCollapse">Borradores</a>
+                    </h4>
+                </div>
+                <div id="draftsBlockCollapse" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        <table class="table" id="draftsBlock">
+                        </table>
+                    </div>
+                </div>
             </div>
         </aside>
 
