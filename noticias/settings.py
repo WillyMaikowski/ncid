@@ -53,7 +53,7 @@ DATE_INPUT_FORMATS = ('%d/%m/%Y', '%Y-%m-%d', '%d/%m/%y')
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/var/www/example.com/media/"
-MEDIA_ROOT = '/projects/Projects/ncid/media'
+MEDIA_ROOT = '/home/ronie/Projects/ncid/media'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
