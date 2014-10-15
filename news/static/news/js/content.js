@@ -185,7 +185,6 @@ function ContentSlide() {
         return {
             title: this.title,
             text: this.text,
-            image: this.image,
             circulation_start: this.circulation_start,
             circulation_end: this.circulation_end,
             published: this.published,

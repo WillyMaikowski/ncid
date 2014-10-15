@@ -37,7 +37,6 @@ class UploadImageForm(forms.Form):
 class SlideForm(forms.Form):
     title = forms.CharField(label=u"Titulo", max_length=255)
     text = forms.CharField(label=u"Texto")
-    image = forms.ImageField(label=u"Imagen", required=False)
     template = forms.IntegerField()
 
     circulation_start = forms.DateTimeField(label=u"Comienzo de circulación")
@@ -53,7 +52,6 @@ class SlideForm(forms.Form):
         data = self.cleaned_data
         slide.title = data['title']
         slide.content = data['text']
-        slide.image = data['image']
 
         tz = timezone.get_default_timezone()
         slide.circulation_start = data['circulation_start']
