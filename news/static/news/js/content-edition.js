@@ -122,7 +122,15 @@ function ContentEditor() {
     }
 
     this.onTextChanged = function(event) {
+        self.updateContentCharacterCount();
         self.autosave();
+    }
+
+    // Update the content character counter.
+    // TODO: Adjust for font size.
+    this.updateContentCharacterCount = function() {
+        var text = this.contentSlide.view.text.text();
+        $("#content-character-count").html("Caracteres: " + text.length);
     }
 
     // Helper method to parse dates.
@@ -145,6 +153,7 @@ function ContentEditor() {
         $("#end-date").val(this.contentSlide.end_date);
         $("#end-time").val(this.contentSlide.end_time);
         $("#published").prop("checked", this.contentSlide.published);
+        this.updateContentCharacterCount();
     }
 
     this.updateModel = function() {
