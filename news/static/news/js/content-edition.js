@@ -300,6 +300,8 @@ ContentEditor.prototype.performTemplateSelection = function() {
             // This content is not new anymore.
             self.isFirstTemplateBeingSelected = false;
 
+            // Autosave the template change.
+            self.autosave();
         }
         else {
             // If this is a new content, just redirect to the index page.
