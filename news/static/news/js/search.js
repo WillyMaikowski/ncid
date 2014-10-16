@@ -25,14 +25,20 @@ function Searcher() {
         this.contents = readContentArray(result);
 
         var table = $( '#search-results' );
+
+        // Display a no results
+        var searchMessage = $( '#search-message' );
+        searchMessage.html('');
         if(this.contents.length == 0) {
-            table.append($('<tr><td>La busqueda no arroja resultados</td></tr>'));
+            searchMessage.html('La busqueda no ha arrojado ningun resultado.');
+            return;
         }
-        else {
-            for(var i = 0; i < this.contents.length; ++i) {
-                table.append(this.makeContentRow(this.contents[i]));
-            }
+
+
+        for(var i = 0; i < this.contents.length; ++i) {
+            table.append(this.makeContentRow(this.contents[i]));
         }
+
     }
 
     // Makes the row for a content.
