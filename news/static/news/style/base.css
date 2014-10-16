@@ -1,7 +1,10 @@
+html {
+    height: 100%;
+}
+
 body {
     font-family: 'Bitter', serif;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    height: 100%;
 }
 td div[class^=col-] {
     padding-left: 0;
@@ -33,11 +36,12 @@ td div[class^=col-] {
 }
 
 #leftPanel {
+    position: relative;
     display: block;
     float: left;
     padding: 10px;
     width: 250px;
-    height: 400px;
+    /*height: 90%;*/
 }
 
 section.content {
@@ -73,7 +77,6 @@ section.content {
 
 #slideContainer {
     padding: 20px;
-    background: lightGray;
 }
 
 #contentToolBar {

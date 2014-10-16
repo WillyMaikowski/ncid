@@ -2,6 +2,7 @@
 var BaseURL = '/news/';
 var IndexURL = BaseURL;
 var AddContentURL = BaseURL + 'content/add';
+var EditAutosaveTime = 5000;
 
 // The content editor.
 function ContentEditor() {
@@ -9,6 +10,7 @@ function ContentEditor() {
     this.isNewContent = false;
     this.isFirstTemplateBeingSelected = false;
     this.contentSlide = null;
+    this.titleChanged = false;
 
     // Rich text editor commands
     this.bold = function() {
@@ -36,7 +38,7 @@ function ContentEditor() {
         var slideContainer = $('#slideContainer');
         slideContainer.empty();
 
-        this.contentSlide.renderTo(slideContainer);
+        this.contentSlide.renderTo(slideContainer, true);
         this.loadMetadata();
         this.makeEditable();
     }
@@ -75,7 +77,8 @@ function ContentEditor() {
     }
 
     this.useTemplate = function (template) {
-        this.contentSlide.view.changeCssClass(template.css_class);
+        this.contentSlide.template = template;
+        this.contentSlide.view.update(true);
     }
 
     // Makes the slide content editable.
@@ -115,18 +118,28 @@ function ContentEditor() {
     }
 
     this.onTitleChanged = function(event) {
-        self.autosave();
+        this.titleChanged = true;
+        self.scheduleAutosave();
     }
 
     // Handle keydown when editing the text.
     this.onTextKeyDown = function(event) {
         // TODO: Filter or catch key presses.
-        self.autosave();
         return true;
     }
 
     this.onTextChanged = function(event) {
         self.updateContentCharacterCount();
+        self.scheduleAutosave();
+    }
+
+    // Handle keydown when editing the text.
+    this.onTextKeyDown = function(event) {
+        // TODO: Filter or catch key presses.
+        return true;
+    }
+
+    this.onDurationChanged = function(event) {
         self.autosave();
     }
 
@@ -147,11 +160,13 @@ function ContentEditor() {
         this.contentSlide.circulation_start = $("#circulation-start").val();
         this.contentSlide.circulation_end = $("#circulation-end").val();
         this.contentSlide.published = $("#published").is(":checked");
+        this.contentSlide.display_duration = $("#display-duration").val();
     }
 
     this.loadMetadata = function() {
         $("#circulation-start").val(this.contentSlide.circulationStart());
         $("#circulation-end").val(this.contentSlide.circulationEnd());
+        $("#display-duration").val(this.contentSlide.display_duration);
         $("#published").prop("checked", this.contentSlide.published);
         this.updateContentCharacterCount();
     }
@@ -169,8 +184,17 @@ function ContentEditor() {
 
     // The autosave keeps the current draft flag.
     this.autosave = function() {
+        this.onScheduledAutosave = function() {};
         if(this.contentSlide.draft)
             this.performSave(this.contentSlide.draft);
+    }
+
+    // Delayed autosave. Used for text input.
+    this.onScheduledAutosave = function() {};
+    this.scheduleAutosave = function() {
+        var self = this;
+        this.onScheduledAutosave = this.autosave;
+        window.setTimeout(function() {self.onScheduledAutosave();}, EditAutosaveTime);
     }
 
     // The save button removes the draft flag.
@@ -185,6 +209,7 @@ function ContentEditor() {
         this.updateModel();
 
         // Encode the data for posting it.
+        var wasDraft = this.contentSlide.draft;
         this.contentSlide.draft = asDraft;
         var data = this.contentSlide.encodeForPost();
 
@@ -204,7 +229,9 @@ function ContentEditor() {
             }
 
             // Update the draft bar
-            draftBar.load();
+            if(this.titleChanged && asDraft || (wasDraft && !asDraft))
+                draftBar.load();
+            this.titleChanged = false;
         });
     }
 
@@ -270,6 +297,7 @@ ContentEditor.prototype.performTemplateSelection = function() {
     function templateClickHandlerFor(index) {
         return function(event) {
             selectedTemplate = templates[index];
+            self.useTemplate(selectedTemplate);
             for(var i = 0; i < selectionElements.length; ++i) {
                 if(index  == i)
                     continue;
@@ -356,6 +384,9 @@ $(document).ready(function() {
     });
 
     $( "#slide-template" ).button();
+
+    // Metadata edition events.
+    $( "#display-duration").on("input", contentEditor.onDurationChanged);
 
     contentEditor.registerTemplateSelectionAction();
 });

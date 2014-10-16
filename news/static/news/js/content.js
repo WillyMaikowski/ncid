@@ -34,10 +34,19 @@ var SlideTemplates = new function() {
     // The Slide template class
     function Template(data)
     {
+        var fields = data.fields;
         this.id = data.pk;
-        this.name = data.fields.name;
-        this.css_class = data.fields.css_class;
-        this.image_url = data.fields.image_url;
+        this.name = fields.name;
+        this.image_url = fields.image_url;
+        this.has_text = fields.has_text;
+        this.has_title = fields.has_title;
+        this.has_image = fields.has_image;
+
+        this.slide_class = fields.slide_class;
+        this.title_class = fields.title_class;
+        this.text_class = fields.text_class;
+        this.image_class = fields.image_class;
+        this.container_class = fields.container_class;
     }
 
     // Method for registering a handler for loading the data.
@@ -145,20 +154,34 @@ function ContentSlideView(model) {
 
     // Instantiate the slide DOM elements
     this.title = $('<div class="slideTitle"></div>"');
+
     this.text = $('<div class="slideText"></div>"');
     this.image = $('<img class="slideImage"></img>"');
-    this.mainElement = $('<div></div>"');
 
-    this.mainElement.append(this.title).append(this.text).append(this.image);
+    this.textImageContainer = $('<div class="slideContent" />').append(this.text).append(this.image);
+    this.mainElement = $('<div />');
+    this.mainElement.append(this.title).append(this.textImageContainer);
 
     // Updates the slide
-    this.update = function() {
+    this.update = function(edition) {
         this.title.html(this.model.title);
         this.text.html(this.model.text);
         if(model.image != null)
             this.image.attr("src", MediaBaseURL + this.model.image);
         else
             this.image.attr("src", BlankImage);
+
+        if(this.model.template) {
+            if(edition && !this.model.template.has_title)
+                this.title.attr("class", 'edition-title');
+            else
+                this.title.attr("class", this.model.template.title_class);
+            this.text.attr("class", this.model.template.text_class);
+            this.image.attr("class", this.model.template.image_class);
+
+            this.textImageContainer.attr("class", this.model.template.container_class);
+            this.mainElement.attr("class", this.model.template.slide_class);
+        }
     };
 
     // Put the data back in the model
@@ -167,10 +190,6 @@ function ContentSlideView(model) {
         this.model.text = this.text.html();
     };
 
-    // Change the slide class.
-    this.changeCssClass = function(cssClass) {
-        this.mainElement.attr("class", cssClass);
-    };
 }
 
 // The content slide class.
@@ -245,8 +264,8 @@ function ContentSlide() {
     }
 
     // Renders the element into a container object.
-    this.renderTo = function(container) {
-        this.view.update();
+    this.renderTo = function(container, edition) {
+        this.view.update(edition);
         container.append(this.view.mainElement);
     }
 

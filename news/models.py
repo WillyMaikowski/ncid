@@ -40,11 +40,17 @@ class Event(models.Model):
 
 class Template(models.Model):
     name = models.CharField(max_length=100)
-    css_class = models.CharField(max_length=100)
     image_url = models.CharField(max_length=100)
 
-    def __unicode__(self):
-        return "'%s' -> '%s'"  % (self.name, self.css_class)
+    has_title = models.BooleanField(default=True)
+    has_text = models.BooleanField(default=True)
+    has_image = models.BooleanField(default=True)
+
+    slide_class = models.CharField(max_length=100)
+    title_class = models.CharField(max_length=100)
+    text_class = models.CharField(max_length=100)
+    image_class = models.CharField(max_length=100)
+    container_class = models.CharField(max_length=100)
 
 class Slide(models.Model):
     author = models.CharField(u"Titulo", max_length=64, default=current_author)

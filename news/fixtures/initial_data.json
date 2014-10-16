@@ -1,45 +1,80 @@
 [
 {
     "fields": {
-        "css_class": "slide-title-text",
+        "slide_class": "slide-title-text",
         "name": "Titulo y Texto",
-        "image_url": "/news/css/image/slide-title-text.png"
+        "image_url": "/static/news/style/images/slide-title-text.png",
+        "has_title": true,
+        "has_text": true,
+        "has_image": false,        
+        "title_class" : "slide-element-title",
+        "text_class" : "slide-element-text",
+        "image_class" : "slide-element-image",
+        "container_class" : "slide-element-container"
     },
     "model": "news.template",
     "pk": 1
 },
 {
     "fields": {
-        "css_class": "slide-title-image",
+        "slide_class": "slide-title-image",
         "name": "Titulo e Imagen",
-        "image_url": "/news/css/image/slide-title-image.png"
+        "image_url": "/static/news/style/images/slide-title-image.png",
+        "has_title": true,
+        "has_text": false,
+        "has_image": true,        
+        "title_class" : "slide-element-title",
+        "text_class" : "slide-element-text",
+        "image_class" : "slide-element-image",
+        "container_class" : "slide-element-container"
     },
     "model": "news.template",
     "pk": 2
 },
 {
     "fields": {
-        "css_class": "slide-title-text-image-vertical",
+        "slide_class": "slide-title-text-image-vertical",
         "name": "Titulo, Texto e Imagen (Vertical)",
-        "image_url": "/news/css/image/slide-title-text-image-vertical.png"
+        "image_url": "/static/news/style/images/slide-title-text-image-vertical.png",
+        "has_title": true,
+        "has_text": true,
+        "has_image": true,        
+        "title_class" : "slide-element-title",
+        "text_class" : "slide-element-text",
+        "image_class" : "slide-element-image",
+        "container_class" : "slide-element-container"
     },
     "model": "news.template",
     "pk": 3
 },
 {
     "fields": {
-        "css_class": "slide-image",
+        "slide_class": "slide-image",
         "name": "Imagen",
-        "image_url": "/news/css/image/slide-image.png"
+        "image_url": "/static/news/style/images/slide-image.png",
+        "has_title": false,
+        "has_text": false,
+        "has_image": true,        
+        "title_class" : "slide-element-title",
+        "text_class" : "slide-element-text",
+        "image_class" : "slide-element-image",
+        "container_class" : "slide-element-container"
     },
     "model": "news.template",
     "pk": 4
 },
 {
     "fields": {
-        "css_class": "slide-title-text-image-horizontal",
+        "slide_class": "slide-title-text-image-horizontal",
         "name": "Titulo, Texto e Imagen (Horizontal)",
-        "image_url": "/news/css/image/slide-title-text-image-horizontal.png"
+        "image_url": "/static/news/style/images/slide-title-text-image-horizontal.png",
+        "has_title": true,
+        "has_text": true,
+        "has_image": true,        
+        "title_class" : "row slide-element-title",
+        "text_class" : "col-xs-6 slide-element-text",
+        "image_class" : "col-xs-6 slide-element-image",
+        "container_class" : "row slide-element-container"
     },
     "model": "news.template",
     "pk": 5

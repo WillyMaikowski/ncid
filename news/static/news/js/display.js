@@ -13,7 +13,7 @@ function NewsDisplay() {
         var self = this;
         SlideTemplates.load(function() {
             self.refresh();
-            window.setInterval(function(){self.refresh}, RefreshInterval)
+            window.setInterval(function(){self.refresh()}, RefreshInterval)
         });
     }
 
@@ -113,7 +113,7 @@ function NewsDisplay() {
             return true;
 
         for(var i = 0; i < this.contents.length; ++i) {
-            if(!this.contents.equals(newContents[i]))
+            if(!this.contents[i].equals(newContents[i]))
                 return true;
         }
         return false;

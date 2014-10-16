@@ -38,7 +38,7 @@
 <div id="slideErrorMessages">
 </div>
 
-<div id="slideContainer">
+<div id="slideContainer" class="cell text-center">
 </div>
 
 <!-- Select Template Dialog -->
@@ -96,6 +96,8 @@
     <input type="text" id="circulation-start" class="dateTimeInput">
     <span>Fin Circulación:</span>
     <input type="text" id="circulation-end" class="dateTimeInput">
+    <span>Duracion:</span>
+    <input type="text" id="display-duration" >
     <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()" >Publicado
     <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
     <input type="submit" value="Guardar" onclick="contentEditor.save()">
