@@ -4,6 +4,27 @@ var MediaBaseURL = '/media/';
 var TemplatesURL = BaseURL + 'slide-templates/all';
 var BlankImage = BaseURL + 'style/images/missing-image.png';
 
+// Helper functions for converting the dates.
+function numberFormatForTime(number) {
+    if(number < 10)
+        return '0' + number;
+    return number;
+}
+
+function formatTime(datetime) {
+    return numberFormatForTime(datetime.getHours()) + ':' + numberFormatForTime(datetime.getMinutes());
+}
+
+// Formats a date for the current localization.
+function localFormatDate(date) {
+    // Hack: Use something more proper
+    return numberFormatForTime(date.getDate()) + '/' + numberFormatForTime(date.getMonth() + 1) + '/' + numberFormatForTime(date.getFullYear());
+}
+
+function localFormatDateTime(datetime) {
+    return localFormatDate(datetime) + " " + formatTime(datetime);
+}
+
 // Singleton object
 var SlideTemplates = new function() {
     var self = this;
@@ -52,6 +73,7 @@ function ContentEvent() {
     this.title = 'Titulo de evento';
     this.lecturer = 'El Charlista';
     this.date = 'Fecha de evento';
+    this.place = 'Lugar';
     this.start_time = 'Hora de comienzo';
     this.end_time = 'Hora de termino';
     this.circulation_start = new Date(Date.now());
@@ -78,6 +100,7 @@ function ContentEvent() {
         this.title = fields.title;
         this.lecturer = fields.lecturer;
         this.date = localFormatDate(new Date(fields.date));
+        this.place = fields.place;
         this.start_time = fields.start_time;
         this.end_time = fields.end_time;
         this.circulation_start = new Date(fields.circulation_start);
@@ -92,6 +115,25 @@ function ContentEvent() {
     // Circulation end
     this.circulationEnd = function() {
         return localFormatDateTime(this.circulation_end);
+    }
+
+    // Render display
+    // This method constructs the element that is going to be inserted into the display.
+    this.renderDisplay = function() {
+        return $('<div class="row" />')
+                .append( $('<div class="col-xs-12" />')
+                    .append( $('<div class="evento" />')
+                        .append( $('<div class="content" style="text-align:justify;text-justify:inter-word;" />')
+                                .html(this.eventText())
+                        )
+                    )
+                );
+    }
+
+    // It creates the event text.
+    this.eventText = function() {
+        // Do this more properly.
+        return this.date + ' ' + this.start_time + ' - ' + this.end_time + ' ' + this.title + ". <i>" + this.lecturer + ". </i> " + this.place;
     }
 }
 
@@ -149,6 +191,14 @@ function ContentSlide() {
 
     this.contentType = function() {
         return 'Contenido';
+    }
+
+    // Tells if this content is equal to another one.
+    this.equals = function(o) {
+        return this.id == o.id && this.author == o.author &&
+                this.title == o.title && this.text == o.text &&
+                this.image == o.image && this.display_duration == o.display_duration &&
+                this.template == o.template;
     }
 
     // This method gives the REST url of the slide
@@ -209,6 +259,22 @@ function ContentSlide() {
     this.circulationEnd = function() {
         return localFormatDateTime(this.circulation_end);
     }
+
+    // Renders the slide indicator.
+    this.renderIndicator = function(index) {
+        return $('<li data-target="#carousel" class=""></li>').attr('data-slide-to', index)
+    }
+
+    // Renders the slide content
+    this.renderContent = function() {
+        this.view.update();
+        return $('<div class="item" />')
+                .append( $('<div class="parent" />')
+                    .append( $('<div class="cell text-center" />')
+                        .append(this.view.mainElement)
+                    )
+                )
+    } 
 }
 
 function readContentArray(contents) {

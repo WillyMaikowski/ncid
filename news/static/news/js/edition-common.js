@@ -56,28 +56,6 @@ $.ajaxSetup({
     }
 });
 
-// Helper functions for converting the dates.
-function numberFormatForTime(number) {
-    if(number < 10)
-        return '0' + number;
-    return number;
-}
-
-function formatTime(datetime) {
-    return numberFormatForTime(datetime.getHours()) + ':' + numberFormatForTime(datetime.getMinutes());
-}
-
-// Formats a date for the current localization.
-function localFormatDate(date) {
-    // Hack: Use something more proper
-    return numberFormatForTime(date.getDate()) + '/' + numberFormatForTime(date.getMonth() + 1) + '/' + numberFormatForTime(date.getFullYear());
-}
-
-function localFormatDateTime(datetime) {
-    return localFormatDate(datetime) + " " + formatTime(datetime);
-}
-
-
 // Draft bar
 function DraftBar() {
     var RefreshInterval = 1000;

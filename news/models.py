@@ -33,7 +33,7 @@ class Event(models.Model):
     @classmethod
     def current_events(cls):
         now = timezone.now()
-        return cls.objects.filter(published=True, circulation_start__lte = now.date(), circulation_start__gte = now.time()).order_by('date', 'start_time')
+        return cls.objects.filter(published=True, circulation_start__lte = now, circulation_end__gte = now).order_by('date', 'start_time')
 
     def __unicode__(self):
         return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)

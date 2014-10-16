@@ -34,7 +34,6 @@ function Searcher() {
             return;
         }
 
-
         for(var i = 0; i < this.contents.length; ++i) {
             table.append(this.makeContentRow(this.contents[i]));
         }
