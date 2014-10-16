@@ -210,7 +210,6 @@ def search_content(request):
     context = {}
     return render(request, 'news/search_content.html', context)
 
-@user_passes_test(user_can_edit, login_url=LoginURL)
 def news_display(request):
     context = {}
     return render(request, 'news/news_display.html', context)
