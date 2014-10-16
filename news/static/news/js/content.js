@@ -114,6 +114,7 @@ function ContentEvent() {
         this.end_time = fields.end_time;
         this.circulation_start = new Date(fields.circulation_start);
         this.circulation_end = new Date(fields.circulation_end);
+        this.published = fields.published;
     }
 
     // Circulation start.
