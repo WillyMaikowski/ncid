@@ -1,0 +1,9 @@
+{% extends "news/news_display.html" %}
+
+{% block start_script %}
+        <script>
+            $(window).load(function() {
+                newsDisplay.startPreviewFor(null, "{% url 'get_content' content_id=content.pk %}");
+            })
+        </script>
+{% endblock %}

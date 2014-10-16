@@ -47,5 +47,13 @@
                 </div>
             </div>
         </div>
+
+{% block start_script %}
+        <script>
+            $(window).load(function() {
+                newsDisplay.start();
+            })
+        </script>
+{% endblock %}
     </body>
 </html>

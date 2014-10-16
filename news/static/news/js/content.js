@@ -228,6 +228,9 @@ function ContentSlide() {
     this.editUrl = function() {
         return this.url() + 'edit';
     }
+    this.previewUrl = function() {
+        return this.url() + 'preview';
+    }
 
     this.readData = function(data) {
         var fields = data.fields;

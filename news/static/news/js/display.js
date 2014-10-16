@@ -7,10 +7,19 @@ var RefreshInterval = 15000;
 function NewsDisplay() {
     this.firstContentRender = true;
     this.contents = [];
+    this.eventURL = CurrentEventURL;
+    this.contentURL = CurrentContentURL;
 
     // Starts the news display
     this.start = function() {
+        this.startPreviewFor(CurrentEventURL, CurrentContentURL);
+    }
+
+    // Starts the new preview for content.
+    this.startPreviewFor = function(eventURL, contentURL) {
         var self = this;
+        self.eventURL = eventURL;
+        self.contentURL = contentURL;
         SlideTemplates.load(function() {
             self.refresh();
             window.setInterval(function(){self.refresh()}, RefreshInterval)
@@ -25,16 +34,24 @@ function NewsDisplay() {
 
     // Refreshes the events.
     this.refreshEvent = function() {
+        // Check if displaying the event.
+        if(this.eventURL == null)
+            return;
+
         var self = this;
-        $.getJSON(CurrentEventURL, function(data) {
+        $.getJSON(this.eventURL, function(data) {
             self.loadEvents(data);
         });
     }
 
     // Refreshes the content.
     this.refreshContent = function() {
+        // Check if displaying the content.
+        if(this.contentURL == null)
+            return;
+
         var self = this;
-        $.getJSON(CurrentContentURL, function(data) {
+        $.getJSON(this.contentURL, function(data) {
             self.loadContent(data);
         });
 
@@ -122,6 +139,4 @@ function NewsDisplay() {
 
 // Use the news display.
 var newsDisplay = new NewsDisplay()
-$(window).load(function() {
-    newsDisplay.start();
-})
+

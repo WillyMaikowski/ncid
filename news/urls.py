@@ -17,6 +17,7 @@ urlpatterns = patterns('',
     # Content URLs
     url(r'^content/(?P<content_id>\d+)/$', views.get_content, name='get_content'),
     url(r'^content/(?P<content_id>\d+)/edit$', views.edit_content, name='edit_content'),
+    url(r'^content/(?P<content_id>\d+)/preview$', views.preview_content, name='preview_content'),
     url(r'^content/(?P<content_id>\d+)/image$', views.upload_content_image, name='upload_content_image'),
     url(r'^content/add$', views.add_content, name='add_content'),
     url(r'^content/all$', views.all_contents, name='all_content'),

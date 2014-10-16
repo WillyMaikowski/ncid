@@ -236,6 +236,8 @@ function ContentEditor() {
     }
 
     this.preview = function() {
+        var win = window.open(this.contentSlide.previewUrl(), '_blank');
+        return win;
     }
 
     this.publishedChanged = function() {

@@ -179,6 +179,13 @@ def edit_content(request, content_id):
     return render(request, 'news/edit_content.html', context)
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
+def preview_content(request, content_id):
+    content = Slide.objects.get(pk=content_id)
+
+    context = {'content' : content}
+    return render(request, 'news/preview_content.html', context)
+
+@user_passes_test(user_can_edit, login_url=LoginURL)
 def upload_content_image(request, content_id):
     content = Slide.objects.get(pk=content_id)
     response = {'accepted': False}
