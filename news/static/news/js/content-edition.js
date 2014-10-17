@@ -199,11 +199,13 @@ function ContentEditor() {
 
     // The save button removes the draft flag.
     this.save = function() {
-        this.performSave(false);
+        this.performSave(false, function() {
+            window.location = BaseURL;
+        });
     }
 
     // This performs a save.
-    this.performSave = function(asDraft) {
+    this.performSave = function(asDraft, afterAction) {
         // Transfer the data from the view into the model.
         var self = this;
         this.updateModel();
@@ -232,6 +234,10 @@ function ContentEditor() {
             if(this.titleChanged && asDraft || (wasDraft && !asDraft))
                 draftBar.load();
             this.titleChanged = false;
+
+            // Peform the after action.
+            if(afterAction)
+                afterAction();
         });
     }
 

@@ -100,6 +100,9 @@ function ContentEvent() {
     this.editUrl = function() {
         return this.url() + 'edit';
     }
+    this.publishUrl = function() {
+        return this.url() + 'publish';
+    }
 
     // Reads the event data from the json.
     this.readData = function(data) {
@@ -230,6 +233,9 @@ function ContentSlide() {
     }
     this.previewUrl = function() {
         return this.url() + 'preview';
+    }
+    this.publishUrl = function() {
+        return this.url() + 'publish';
     }
 
     this.readData = function(data) {

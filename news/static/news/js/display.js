@@ -1,7 +1,7 @@
 var BaseURL = '/news/';
 var CurrentContentURL = BaseURL + 'content/currents';
 var CurrentEventURL = BaseURL + 'event/currents';
-var RefreshInterval = 15000;
+var RefreshInterval = 3000;
 
 // The news display class.
 function NewsDisplay() {

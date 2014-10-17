@@ -9,6 +9,7 @@ from django import forms
 from django.core.urlresolvers import reverse
 from django.utils import timezone
 from django.contrib.auth import authenticate, login, logout
+from django.core.validators import MinValueValidator
 
 from datetime import *
 from itertools import chain
@@ -42,7 +43,7 @@ class SlideForm(forms.Form):
     circulation_start = forms.DateTimeField(label=u"Comienzo de circulación")
     circulation_end = forms.DateTimeField(label=u"Fin de circulación")
 
-    display_duration = forms.FloatField(label=u"Tiempo en pantalla")
+    display_duration = forms.FloatField(label=u"Tiempo en pantalla", validators=[MinValueValidator(1.0)])
     published = forms.BooleanField(label=u"Publicado", required=False)
     draft = forms.BooleanField(label=u"Borrador", required=False)
 
@@ -68,6 +69,9 @@ class SlideForm(forms.Form):
         event_id = data['associated_event']
         if event_id != None:
             slide.associated_event = Event.objects.get(pk=event_id)
+
+class PublishedChangeForm(forms.Form):
+    published = forms.BooleanField(required=False)
 
 # Tells if the user has edition permissions.
 def user_can_edit(user):
@@ -149,6 +153,18 @@ def edit_event(request, event_id):
                 'creation_timestamp' : event.creation_timestamp}
     return render(request, 'news/edit_event_form.html', context)
 
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def publish_event(request, event_id):
+    event = Event.objects.get(pk=event_id)
+    response = {'accepted': False}
+    if request.method == 'POST':
+        form = PublishedChangeForm(request.POST)
+        if form.is_valid():
+            event.published = form.cleaned_data['published']
+            event.save();
+            response = {'accepted': True}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 @ensure_csrf_cookie
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def edit_content(request, content_id):
@@ -190,16 +206,26 @@ def upload_content_image(request, content_id):
     content = Slide.objects.get(pk=content_id)
     response = {'accepted': False}
     if request.method == 'POST':
-        print 'Post image ' , request.POST
-        print 'File image ' , request.FILES
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
-            print 'Post valid'
             content.image = request.FILES['image']
             content.save();
             response = {'accepted': True}
 
     return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
+
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def publish_content(request, content_id):
+    content = Slide.objects.get(pk=content_id)
+    response = {'accepted': False}
+    if request.method == 'POST':
+        form = PublishedChangeForm(request.POST)
+        if form.is_valid():
+            content.published = form.cleaned_data['published']
+            content.save();
+            response = {'accepted': True}
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def add_content(request):

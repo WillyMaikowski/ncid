@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.core.validators import MinValueValidator
 from django.utils import timezone
 
 def current_author():
@@ -62,7 +63,7 @@ class Slide(models.Model):
     circulation_start = models.DateTimeField(u"Comienzo de circulación", default=timezone.now)
     circulation_end = models.DateTimeField(u"Fin de circulación", default=timezone.now)
 
-    display_duration = models.FloatField(u"Tiempo en pantalla", default=15.0)
+    display_duration = models.FloatField(u"Tiempo en pantalla", default=15.0, validators=[MinValueValidator(1.0)])
     published = models.BooleanField(u"Publicado", default=False)
     draft = models.BooleanField(u"Borrador", default=True)
     associated_event = models.ForeignKey(Event, null=True, blank=True)

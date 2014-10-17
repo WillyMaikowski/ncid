@@ -52,6 +52,9 @@ function Searcher() {
 
         var published = $('<td class="search-result-circulation-end">Publicado</td>');
         var published_box = $('<input type="checkbox" >').prop("checked", content.published);
+        published_box.change(function() {
+            $.post(content.publishUrl(), {published: published_box.prop("checked")});
+        });
 
         published.prepend(published_box);
 
