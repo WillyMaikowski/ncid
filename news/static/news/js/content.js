@@ -146,7 +146,7 @@ function ContentEvent() {
     // It creates the event text.
     this.eventText = function() {
         // Do this more properly.
-        return this.date + ' ' + this.start_time + ' - ' + this.end_time + ' ' + this.title + ". <i>" + this.lecturer + ". </i> " + this.place;
+        return this.title + '<br>' + this.lecturer + '<br>' + this.place + '<br> ' + this.date + "<br>" + this.start_time;
     }
 }
 
