@@ -34,6 +34,26 @@ function ContentEditor() {
         this.autosave();
     }
 
+    this.justifyLeft = function() {
+        document.execCommand("justifyLeft", false, null);
+        this.autosave();
+    }
+
+    this.justifyCenter = function() {
+        document.execCommand("justifyCenter", false, null);
+        this.autosave();
+    }
+
+    this.justifyRight = function() {
+        document.execCommand("justifyRight", false, null);
+        this.autosave();
+    }
+
+    this.justifyFull = function() {
+        document.execCommand("justifyFull", false, null);
+        this.autosave();
+    }
+
     this.changeSlide = function() {
         var slideContainer = $('#slideContainer');
         slideContainer.empty();
@@ -222,6 +242,7 @@ function ContentEditor() {
                 self.showValidationErrors(result.errors);
                 return;
             }
+            self.removeErrors();
 
             // Redirect if creating a new content.
             if(self.isNewContent) {
@@ -263,7 +284,37 @@ function ContentEditor() {
     }
 
     this.showValidationErrors = function(errors) {
-        console.log(errors);
+        var names = {
+            title: 'Titulo',
+            text: 'Texto',
+            content: 'Contenido',
+            image: 'Imagen',
+
+            display_duration: 'Duración en Pantalla',
+            circulation_start: 'Comienzo de Circulación',
+            circulation_end: 'Fin de Circulación',
+
+            published: 'Publicado',
+        };
+
+        // Add a list with the errors.
+        var list = $("<ul />");
+        $("#slideErrorMessages").empty().append(list);
+
+        // Add the error messages.
+        for(var element in errors) {
+            var elementMessage = errors[element];
+            var elementName = names[element];
+            if(!elementName)
+                elementName = element;
+
+            var display = $("<li />").html(elementName + ': ' + elementMessage);
+            list.append(display);
+        }
+    }
+
+    this.removeErrors = function() {
+        $("#slideErrorMessages").empty();
     }
 
     // Register the event handlers.
@@ -285,7 +336,6 @@ function ContentEditor() {
         $("#selectTemplateOK").click(function() {
             accepted = true;
         });
-
     }
 }
 

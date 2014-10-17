@@ -75,6 +75,10 @@ section.content {
     height: 18px;
 }
 
+#slideErrorMessages {
+    color: red;
+}
+
 #slideContainer {
     padding: 20px;
 }

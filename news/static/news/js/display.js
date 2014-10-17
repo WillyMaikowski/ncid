@@ -108,13 +108,44 @@ function NewsDisplay() {
         }
 
         // Enable the carousel in the first content render.
+        this.enableCarousel();
+    }
+
+    // Enables the carousel.
+    // Taken from http://stackoverflow.com/questions/14236516/twitter-bootstrap-carousel-slide-duration
+    this.enableCarousel = function() {
+        if(!this.firstContentRender)
+            return;
+        this.firstContentRender = false;
+
+        var start = 1000;
+        var interval = 1000;
         var carousel = $('#carousel');
-        if(this.firstContentRender) {
+        var carouselItems = $('#slides-holder');
+
+        t = window.setTimeout(function() {
             carousel.carousel({
-                interval: 5000,
+                interval: interval,
             });
-            this.firstContentRender = false;
-        }
+        }, start - interval);
+
+        carousel.on('slid.bs.carousel', function () {   
+             clearTimeout(t);  
+             var duration = carouselItems.find('.active').attr('data-interval');
+
+             carousel.carousel('pause');
+             t = setTimeout(function() {
+                carousel.carousel();
+             }, duration - interval);
+        })
+
+        $('.carousel-control.right').on('click', function(){
+            clearTimeout(t);   
+        });
+
+        $('.carousel-control.left').on('click', function(){
+            clearTimeout(t);   
+        });
 
     }
 

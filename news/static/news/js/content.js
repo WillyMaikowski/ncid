@@ -298,6 +298,7 @@ function ContentSlide() {
     this.renderContent = function() {
         this.view.update();
         return $('<div class="item" />')
+                .attr("data-interval", this.display_duration*1000)
                 .append( $('<div class="parent" />')
                     .append( $('<div class="cell text-center" />')
                         .append(this.view.mainElement)
