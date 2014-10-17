@@ -170,6 +170,11 @@ def publish_event(request, event_id):
 def edit_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     if request.method == 'POST':
+        # Check if deleting a content
+        if 'delete' in request.POST:
+            content.delete()
+            return HttpResponse(json.dumps({'accepted': True}))
+
         # Check if canceling a draft.
         if 'cancel' in request.POST:
             if content.draft:

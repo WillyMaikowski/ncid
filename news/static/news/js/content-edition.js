@@ -255,6 +255,13 @@ function ContentEditor() {
             window.location = IndexURL;
         });
     }
+
+    this.delete = function() {
+        $.post(this.saveURL(), {'delete':true}, function(result) {
+            window.location = IndexURL;
+        });
+    }
+
     this.showValidationErrors = function(errors) {
         console.log(errors);
     }

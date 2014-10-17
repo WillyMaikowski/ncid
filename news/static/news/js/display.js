@@ -110,7 +110,9 @@ function NewsDisplay() {
         // Enable the carousel in the first content render.
         var carousel = $('#carousel');
         if(this.firstContentRender) {
-            carousel.carousel();
+            carousel.carousel({
+                interval: 5000,
+            });
             this.firstContentRender = false;
         }
 
