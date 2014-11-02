@@ -13,7 +13,7 @@ from django.core.validators import MinValueValidator
 
 from datetime import *
 from itertools import chain
-from news.models import Alert, Template, Event, Slide
+from news.models import Template, Event, Slide
 from django.contrib.auth.decorators import user_passes_test
 
 LoginURL = '/news/login'
@@ -22,11 +22,9 @@ LoginURL = '/news/login'
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        exclude = ('author', 'creation_timestamp',)
+        exclude = ('author', 'creation_timestamp', 'last_modification_timestamp')
         widgets = {
-            'date' : forms.DateInput(attrs = {'class': 'dateInput'}),
-            'start_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
-            'end_time' : forms.TimeInput(attrs = {'class': 'timeInput'}),
+            'date_time' : forms.DateTimeInput(attrs = {'class': 'dateTimeInput'}),
             'circulation_start' : forms.DateTimeInput(attrs = {'class': 'dateTimeInput'}),
             'circulation_end' : forms.DateTimeInput(attrs = {'class': 'dateTimeInput'}),
         }
@@ -114,7 +112,7 @@ def add_event(request):
         if 'cancel' in request.POST:
             return HttpResponseRedirect(reverse('index'))
 
-        form = EventForm(request.POST)
+        form = EventForm(request.POST, request.FILES)
         if form.is_valid():
             event = form.save(commit=False)
             event.author = request.user.username
@@ -140,7 +138,7 @@ def edit_event(request, event_id):
             return HttpResponseRedirect(reverse('index'))
 
         # Validate the form and change the event.
-        form = EventForm(request.POST, instance=event)
+        form = EventForm(request.POST, request.FILES, instance=event)
         if form.is_valid():
             event = form.save()
             return HttpResponseRedirect(reverse('edit_event', kwargs={'event_id': event.pk }))
@@ -254,13 +252,13 @@ def news_display(request):
 
 # Content searches
 def search_content_by_title(term):
-    events = Event.objects.filter(title__icontains=term).order_by('-date', '-start_time')
+    events = Event.objects.filter(title__icontains=term).order_by('-date_time')
     slides = Slide.objects.filter(draft=False, title__icontains=term).order_by('-circulation_start')
     return list(chain(events, slides))
 
 def search_content_by_date(term):
     parsedDate = datetime.strptime(term, '%d/%m/%Y').date()
-    events = Event.objects.filter(date=parsedDate).order_by('-date', '-start_time')
+    events = Event.objects.filter(date=parsedDate).order_by('-date_time')
     slides = Slide.objects.filter(draft=False, circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
     return list(chain(events, slides))
 

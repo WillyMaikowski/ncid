@@ -81,10 +81,8 @@ function ContentEvent() {
     this.author = 'unknown';
     this.title = 'Titulo de evento';
     this.lecturer = 'El Charlista';
-    this.date = 'Fecha de evento';
     this.place = 'Lugar';
-    this.start_time = 'Hora de comienzo';
-    this.end_time = 'Hora de termino';
+    this.date_time = new Date(Date.now());;
     this.circulation_start = new Date(Date.now());
     this.circulation_end = new Date(Date.now())
     this.published = false;
@@ -111,10 +109,8 @@ function ContentEvent() {
         this.author = fields.author;
         this.title = fields.title;
         this.lecturer = fields.lecturer;
-        this.date = localFormatDate(new Date(fields.date));
+        this.date_time = localFormatDateTime(new Date(fields.date_time));
         this.place = fields.place;
-        this.start_time = fields.start_time;
-        this.end_time = fields.end_time;
         this.circulation_start = new Date(fields.circulation_start);
         this.circulation_end = new Date(fields.circulation_end);
         this.published = fields.published;
@@ -146,7 +142,7 @@ function ContentEvent() {
     // It creates the event text.
     this.eventText = function() {
         // Do this more properly.
-        return this.title + '<br>' + this.lecturer + '<br>' + this.place + '<br> ' + this.date + "<br>" + this.start_time;
+        return this.title + '<br>' + this.lecturer + '<br>' + this.place + '<br> ' + this.date_time;
     }
 }
 
