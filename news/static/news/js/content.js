@@ -80,6 +80,7 @@ function ContentEvent() {
     this.id = null;
     this.author = 'unknown';
     this.title = 'Titulo de evento';
+    this.image = null;
     this.lecturer = 'El Charlista';
     this.place = 'Lugar';
     this.date_time = new Date(Date.now());;
@@ -108,6 +109,7 @@ function ContentEvent() {
         this.id = data.pk;
         this.author = fields.author;
         this.title = fields.title;
+        this.image = fields.image;
         this.lecturer = fields.lecturer;
         this.date_time = localFormatDateTime(new Date(fields.date_time));
         this.place = fields.place;
