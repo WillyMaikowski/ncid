@@ -74,7 +74,9 @@ function DraftBar() {
     this.addContentToBlock = function(content, block) {
         var element = $( "<a></a>" );
         element.attr("href", content.editUrl());
-        element.html(content.title);
+        content.onDraftLoaded(function () {
+            element.html(content.draft_version.title);
+        });
         block.append($( "<tr></tr>").append( $("<td></td>").append(element)) );
     }
 

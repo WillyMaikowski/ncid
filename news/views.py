@@ -13,7 +13,7 @@ from django.core.validators import MinValueValidator
 
 from datetime import *
 from itertools import chain
-from news.models import Template, Event, Slide
+from news.models import Template, Event, Slide, SlideDraft
 from django.contrib.auth.decorators import user_passes_test
 
 LoginURL = '/news/login'
@@ -49,24 +49,44 @@ class SlideForm(forms.Form):
 
     def store_in_slide(self, slide):
         data = self.cleaned_data
-        slide.title = data['title']
-        slide.content = data['text']
+        draft = data['draft']
+
+        # Select the actual slide version
+        dest_slide = slide
+        old_draft = None
+        if draft:
+            dest_slide = slide.draft_version
+            if dest_slide == None:
+                dest_slide = SlideDraft()
+                dest_slide.setContent(slide)
+                dest_slide.save();
+                slide.draft_version = dest_slide
+                slide.save();
+        else:
+            # Use the correct image URL.
+            slide.saved = True
+            if slide.draft_version != None:
+                old_draft = slide.draft_version
+                slide.image = slide.draft_version.image
+                slide.draft_version = None
+            
+
+        dest_slide.title = data['title']
+        dest_slide.content = data['text']
 
         tz = timezone.get_default_timezone()
-        slide.circulation_start = data['circulation_start']
-        slide.circulation_end = data['circulation_end']
+        dest_slide.circulation_start = data['circulation_start']
+        dest_slide.circulation_end = data['circulation_end']
 
-        slide.display_duration = data['display_duration']
-        slide.published = data['published']
-        slide.draft = data['draft']
+        dest_slide.display_duration = data['display_duration']
+        dest_slide.published = data['published']
 
         # Get the associated template.
-        slide.template = Template.objects.get(pk=data['template'])
+        dest_slide.template = Template.objects.get(pk=data['template'])
+        dest_slide.save()
 
-        # Get the associated event.
-        event_id = data['associated_event']
-        if event_id != None:
-            slide.associated_event = Event.objects.get(pk=event_id)
+        if not draft and old_draft != None:
+            old_draft.delete()
 
 class PublishedChangeForm(forms.Form):
     published = forms.BooleanField(required=False)
@@ -168,15 +188,20 @@ def publish_event(request, event_id):
 def edit_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     if request.method == 'POST':
+        draft_slide = content.draft_version
         # Check if deleting a content
         if 'delete' in request.POST:
             content.delete()
+            if draft_slide != None:
+                draft_slide.delete()
             return HttpResponse(json.dumps({'accepted': True}))
 
         # Check if canceling a draft.
         if 'cancel' in request.POST:
-            if content.draft:
-                content.delete()
+            if draft_slide != None:
+                content.draft_slide = None
+                content.save()
+                draft_slide.delete()
             return HttpResponse(json.dumps({'accepted': True}))
 
         form = SlideForm(request.POST)
@@ -187,7 +212,6 @@ def edit_content(request, content_id):
 
             # Store the slide data.
             form.store_in_slide(content)
-            content.save()
         else:
             response['accepted'] = False
             response['errors'] = form.errors
@@ -211,8 +235,8 @@ def upload_content_image(request, content_id):
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
-            content.image = request.FILES['image']
-            content.save();
+            content.draft_slide.image = request.FILES['image']
+            content.draft_slide.save();
             response = {'accepted': True}
 
     return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
@@ -237,8 +261,13 @@ def add_content(request):
     content.content = 'Borrador'
     content.template = Template.objects.all()[0]
     content.author = request.user.username
-    content.save()
 
+    draft = SlideDraft()
+    draft.setContent(content)
+    draft.save()
+
+    content.draft_version = draft
+    content.save()
     return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
@@ -253,13 +282,13 @@ def news_display(request):
 # Content searches
 def search_content_by_title(term):
     events = Event.objects.filter(title__icontains=term).order_by('-date_time')
-    slides = Slide.objects.filter(draft=False, title__icontains=term).order_by('-circulation_start')
+    slides = Slide.objects.filter(saved=True, title__icontains=term).order_by('-circulation_start')
     return list(chain(events, slides))
 
 def search_content_by_date(term):
     parsedDate = datetime.strptime(term, '%d/%m/%Y').date()
     events = Event.objects.filter(date=parsedDate).order_by('-date_time')
-    slides = Slide.objects.filter(draft=False, circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
+    slides = Slide.objects.filter(saved=True, circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
     return list(chain(events, slides))
 
 
@@ -284,6 +313,11 @@ def all_contents(request):
 def get_content(request, content_id):
     content = Slide.objects.get(pk=content_id)
     return HttpResponse(serializers.serialize("json", [content]), content_type="application/json")
+
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def get_content_draft(request, content_id):
+    content = Slide.objects.get(pk=content_id)
+    return HttpResponse(serializers.serialize("json", [content.draft_version]), content_type="application/json")
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def search_content_query_json(request):

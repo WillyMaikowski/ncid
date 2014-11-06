@@ -146,6 +146,11 @@ function ContentEvent() {
         // Do this more properly.
         return this.title + '<br>' + this.lecturer + '<br>' + this.place + '<br> ' + this.date_time;
     }
+
+    // Hack for loading
+    this.onDraftLoaded = function(action) {
+        action();
+    }
 }
 
 
@@ -194,6 +199,43 @@ function ContentSlideView(model) {
 
 }
 
+// Content slide draft
+function SlideDraft() {
+    this.id = null;
+    this.author = 'unknown';
+    this.title = "Titulo";
+    this.text = "Contenido";
+    this.image = null;
+    this.circulation_start = new Date(Date.now())
+    this.circulation_end = new Date(Date.now())
+    this.published = false;
+    this.display_duration = 15.0;
+    this.template = null;
+
+    this.readData = function(data, done) {
+        var fields = data.fields;
+        this.id = data.pk;
+
+        this.author = fields.author;
+        this.title = fields.title;
+        this.text = fields.content;
+        this.image = fields.image;
+
+        this.circulation_start = moment(fields.circulation_start).toDate();
+        this.circulation_end = moment(fields.circulation_end).toDate();
+
+        this.display_duration = fields.display_duration;
+        this.published = fields.published;
+        this.template = SlideTemplates.all[fields.template-1];
+
+        if(this.image.length == 0)
+            this.image = null;
+
+        if(done)
+            done();
+    }
+}
+
 // The content slide class.
 function ContentSlide() {
     this.id = null;
@@ -226,6 +268,9 @@ function ContentSlide() {
     this.url = function() {
         return BaseURL + "content/" + this.id + "/";
     }
+    this.draftUrl = function() {
+        return BaseURL + "content/" + this.id + "/draft";
+    }
     this.editUrl = function() {
         return this.url() + 'edit';
     }
@@ -236,7 +281,7 @@ function ContentSlide() {
         return this.url() + 'publish';
     }
 
-    this.readData = function(data) {
+    this.readData = function(data, done) {
         var fields = data.fields;
         this.id = data.pk;
 
@@ -250,11 +295,63 @@ function ContentSlide() {
 
         this.display_duration = fields.display_duration;
         this.published = fields.published;
-        this.draft = fields.draft;
+        this.draft = fields.draft_version != null;
         this.template = SlideTemplates.all[fields.template-1];
 
         if(this.image.length == 0)
             this.image = null;
+
+        if(fields.draft_version != null)
+            this.loadDraftVersion(done);
+        else {
+            if(done)
+                done();
+        }
+    }
+
+    this.useDraft = function() {
+        if(this.draft_version == null)
+            return;
+
+        this.draft = true;
+        this.setContent(this.draft_version);
+    }
+
+    this.setContent = function(content) {
+        this.author = content.author;
+        this.title = content.title;
+        this.text = content.text;
+        this.image = content.image;
+
+        this.circulation_start = content.circulation_start;
+        this.circulation_end = content.circulation_end;
+
+        this.display_duration = content.display_duration;
+        this.published = content.published;
+        this.template = content.template;
+    }
+
+    var draftLoadedAction = function() {
+    }
+
+    this.onDraftLoaded = function(action) {
+        if(this.draft_version != null) {
+            action(this.draft_version);
+        }
+
+        var oldAction = draftLoadedAction;
+        draftLoadedAction = function() {
+            oldAction();
+            action();
+        }
+    }
+    this.loadDraftVersion = function(done) {
+        var self = this;
+        $.getJSON(self.draftUrl(), function(data) {
+            self.draft_version = new SlideDraft();
+            self.draft_version.readData(data[0], done)
+            draftLoadedAction();
+        });
     }
 
     // This method encodes the slide into a simpler object for posting.
@@ -305,17 +402,36 @@ function ContentSlide() {
     } 
 }
 
-function readContentArray(contents) {
+function readContentArray(contents, fullLoadHandler) {
     var ModelMap = {
         'news.event': ContentEvent,
         'news.slide': ContentSlide
     };
 
-    return contents.map(function(content) {
+
+    // Count the loading of the drafts.
+    var remainingLoad = contents.length    
+    var loadedContents = null;
+    function draftLoaded() {
+        remainingLoad--;
+        if(remainingLoad == 0 && loadedContents && fullLoadHandler)
+            fullLoadHandler(loadedContents);
+    }
+
+    // Read the partial data without the drafts.
+    loadedContents = contents.map(function(content) {
         var obj = new ModelMap[content.model] ();
+        obj.onDraftLoaded(draftLoaded);
         obj.readData(content);
+
         return obj;
     });
+
+    // Check if it was loaded early
+    if(remainingLoad == 0 && fullLoadHandler)
+        fullLoadHandle(loadedContents);
+
+    return loadedContents;
 }
 
 

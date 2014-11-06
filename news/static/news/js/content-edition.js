@@ -73,11 +73,13 @@ function ContentEditor() {
             // Get the slides.
             $.getJSON(content.url(), function(data) {
                 // Read the slide data.
-                content.readData(data[0]);
-                self.contentSlide = content;
-                
-                // Display the slide
-                self.changeSlide();
+                content.readData(data[0], function() {
+                    self.contentSlide = content;
+                    self.contentSlide.useDraft()
+                    
+                    // Display the slide
+                    self.changeSlide();
+                });
             });
         });
     }
@@ -205,8 +207,7 @@ function ContentEditor() {
     // The autosave keeps the current draft flag.
     this.autosave = function() {
         this.onScheduledAutosave = function() {};
-        if(this.contentSlide.draft)
-            this.performSave(this.contentSlide.draft);
+        this.performSave(true);
     }
 
     // Delayed autosave. Used for text input.
@@ -252,7 +253,7 @@ function ContentEditor() {
             }
 
             // Update the draft bar
-            if(this.titleChanged && asDraft || (wasDraft && !asDraft))
+            if(this.titleChanged || asDraft || wasDraft != asDraft)
                 draftBar.load();
             this.titleChanged = false;
 
@@ -263,6 +264,7 @@ function ContentEditor() {
     }
 
     this.preview = function() {
+        this.autosave();
         var win = window.open(this.contentSlide.previewUrl(), '_blank');
         return win;
     }

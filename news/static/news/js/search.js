@@ -86,5 +86,5 @@ function Searcher() {
 // Searcher interface object.
 var searcher = new Searcher();
 
-$(document).ready(function() {searcher.search();})
+SlideTemplates.load(function() {searcher.search();})
 
