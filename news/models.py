@@ -46,6 +46,10 @@ class Event(Content):
     def __unicode__(self):
         return "%s %s - %s '%s' - %s" % (str(self.date), str(self.start_time), str(self.end_time), self.title, self.lecturer)
 
+# Content tag
+class Tag(models.Model):
+    name = models.CharField(max_length=64, primary_key=True)
+
 # Template class
 class Template(models.Model):
     name = models.CharField(max_length=100)
@@ -65,12 +69,14 @@ class Template(models.Model):
 class SlideCommon(Content):
     content = models.TextField(u"Contenido", blank=True)
     template = models.ForeignKey(Template)
+    tag = models.ForeignKey(Tag, null=True, on_delete = models.SET_NULL)
     display_duration = models.FloatField(u"Tiempo en pantalla", default=15.0, validators=[MinValueValidator(1.0)])
 
     def setContent(self, content):
         Content.setContent(self, content)
         self.content = content.content
         self.template = content.template
+        self.tag = content.tag
         self.display_duration = content.display_duration
 
     class Meta:

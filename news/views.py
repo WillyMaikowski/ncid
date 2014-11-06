@@ -13,7 +13,7 @@ from django.core.validators import MinValueValidator
 
 from datetime import *
 from itertools import chain
-from news.models import Template, Event, Slide, SlideDraft
+from news.models import Tag, Template, Event, Slide, SlideDraft
 from django.contrib.auth.decorators import user_passes_test
 
 LoginURL = '/news/login'
@@ -37,6 +37,7 @@ class SlideForm(forms.Form):
     title = forms.CharField(label=u"Titulo", max_length=255)
     text = forms.CharField(label=u"Texto")
     template = forms.IntegerField()
+    tag = forms.CharField(max_length=64, required=False)
 
     circulation_start = forms.DateTimeField(label=u"Comienzo de circulación")
     circulation_end = forms.DateTimeField(label=u"Fin de circulación")
@@ -299,6 +300,21 @@ def dispatch_search_content_query(category, search_term):
 
     return SearchMethods[category] (search_term)
 
+# Tag edition
+@ensure_csrf_cookie
+@user_passes_test(user_can_edit, login_url=LoginURL)
+def edit_tags(request):
+    if request.method == 'POST':
+        if 'addTag' in request.POST:
+            tag = Tag(name= request.POST['name'])
+            tag.save()
+        if 'deleteTag' in request.POST:
+            tag = Tag.objects.get(pk=request.POST['name'])
+            tag.delete()
+
+    context = {'tags' : Tag.objects.all()}
+    return render(request, 'news/edit_tags.html', context)
+
 # Methods used via AJAX
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def all_events(request):
@@ -330,6 +346,9 @@ def search_content_query_json(request):
         return HttpResponse("[]", content_type="application/json")
     
 # Public AJAX methods
+def all_tags(request):
+    return HttpResponse(serializers.serialize("json", Tag.objects.all()), content_type="application/json")
+
 def all_slide_templates(request):
     return HttpResponse(serializers.serialize("json", Template.objects.all()), content_type="application/json")
 

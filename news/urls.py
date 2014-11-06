@@ -27,6 +27,11 @@ urlpatterns = patterns('',
     url(r'^content/currents$', views.current_slides, name='current_slides'),
     url(r'^content/draft$', views.current_drafts, name='current_drafts'),
 
+    # Tags URLs
+    url(r'^tags/$', views.edit_tags, name='edit_tags'),
+    url(r'^tags/all$', views.all_tags, name='all_tags'),
+
+    # Seach URLs
     url(r'^search/$', views.search_content, name='search_content'),
     url(r'^search/json', views.search_content_query_json, name='search_content_query_json'),
 
