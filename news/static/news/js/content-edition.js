@@ -162,6 +162,10 @@ function ContentEditor() {
     }
 
     this.onDurationChanged = function(event) {
+        self.scheduleAutosave();
+    }
+
+    this.onTagChanged = function(event) {
         self.autosave();
     }
 
@@ -183,6 +187,7 @@ function ContentEditor() {
         this.contentSlide.circulation_end = $("#circulation-end").val();
         this.contentSlide.published = $("#published").is(":checked");
         this.contentSlide.display_duration = $("#display-duration").val();
+        this.contentSlide.tag = $("#tag-selection").val();
     }
 
     this.loadMetadata = function() {
@@ -190,6 +195,7 @@ function ContentEditor() {
         $("#circulation-end").val(this.contentSlide.circulationEnd());
         $("#display-duration").val(this.contentSlide.display_duration);
         $("#published").prop("checked", this.contentSlide.published);
+        $("#tag-selection").val(this.contentSlide.tag);
         this.updateContentCharacterCount();
     }
 
@@ -454,6 +460,7 @@ $(document).ready(function() {
 
     // Metadata edition events.
     $( "#display-duration").on("input", contentEditor.onDurationChanged);
+    $( "#tag-selection").change(contentEditor.onTagChanged)
 
     contentEditor.registerTemplateSelectionAction();
 });

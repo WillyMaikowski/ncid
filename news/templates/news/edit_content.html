@@ -113,13 +113,22 @@
     <input type="text" id="circulation-end" class="dateTimeInput">
     <span>Duracion:</span>
     <input type="text" id="display-duration" >
+    <span>Tag:</span>
+    <select id="tag-selection">
+        <option value=""></option>
+        {% for tag in tags %}
+            <option value="{{ tag.name }}">{{tag.name}}</option>
+        {% endfor %}
+    </select>
+
+    <span id="content-character-count">Caracteres: 0</span>
+    <br>
+
     <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()" >Publicado
     <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
     <input type="submit" value="Guardar" onclick="contentEditor.save()">
     <input type="submit" value="Cancelar" onclick="contentEditor.cancel()">
     <input type="submit" value="Borrar" onclick="contentEditor.delete()">
-
-    <span id="content-character-count">Caracteres: 0</span>
 </div>
 {% endblock %}
 

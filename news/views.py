@@ -82,6 +82,13 @@ class SlideForm(forms.Form):
         dest_slide.display_duration = data['display_duration']
         dest_slide.published = data['published']
 
+        # Get the tag.
+        tagName = data['tag']
+        if tagName == None or len(tagName) == 0:
+            dest_slide.tag = None
+        else:
+            dest_slide.tag = Tag.objects.get(pk=tagName)
+
         # Get the associated template.
         dest_slide.template = Template.objects.get(pk=data['template'])
         dest_slide.save()
@@ -218,7 +225,8 @@ def edit_content(request, content_id):
             response['errors'] = form.errors
         return HttpResponse(json.dumps(response), content_type="application/json")
 
-    context = {'content' : content}
+    context = {'content' : content,
+               'tags' : Tag.objects.all()}
     return render(request, 'news/edit_content.html', context)
 
 @user_passes_test(user_can_edit, login_url=LoginURL)

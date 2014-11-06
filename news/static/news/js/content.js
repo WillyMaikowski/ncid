@@ -87,6 +87,7 @@ function ContentEvent() {
     this.circulation_start = new Date(Date.now());
     this.circulation_end = new Date(Date.now())
     this.published = false;
+    this.tag = '';
 
     this.contentType = function() {
         return 'Evento';
@@ -211,6 +212,7 @@ function SlideDraft() {
     this.published = false;
     this.display_duration = 15.0;
     this.template = null;
+    this.tag = null;
 
     this.readData = function(data, done) {
         var fields = data.fields;
@@ -227,10 +229,11 @@ function SlideDraft() {
         this.display_duration = fields.display_duration;
         this.published = fields.published;
         this.template = SlideTemplates.all[fields.template-1];
+        this.tag = fields.tag;
 
         if(this.image.length == 0)
             this.image = null;
-
+        this.tag = fields.tag;
         if(done)
             done();
     }
@@ -261,7 +264,7 @@ function ContentSlide() {
         return this.id == o.id && this.author == o.author &&
                 this.title == o.title && this.text == o.text &&
                 this.image == o.image && this.display_duration == o.display_duration &&
-                this.template == o.template;
+                this.template == o.template && this.tag == o.tag;
     }
 
     // This method gives the REST url of the slide
@@ -297,6 +300,7 @@ function ContentSlide() {
         this.published = fields.published;
         this.draft = fields.draft_version != null;
         this.template = SlideTemplates.all[fields.template-1];
+        this.tag = fields.tag;
 
         if(this.image.length == 0)
             this.image = null;
@@ -329,6 +333,7 @@ function ContentSlide() {
         this.display_duration = content.display_duration;
         this.published = content.published;
         this.template = content.template;
+        this.tag = content.tag;
     }
 
     var draftLoadedAction = function() {
@@ -356,6 +361,10 @@ function ContentSlide() {
 
     // This method encodes the slide into a simpler object for posting.
     this.encodeForPost = function() {
+        var tagValue = this.tag;
+        if(tagValue != null && !tagValue.length)
+            tagValue = null;
+
         return {
             title: this.title,
             text: this.text,
@@ -365,6 +374,7 @@ function ContentSlide() {
             draft: this.draft,
             display_duration: this.display_duration,
             template: this.template.id,
+            tag: tagValue
         }
     }
 
