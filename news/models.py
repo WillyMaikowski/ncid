@@ -82,7 +82,7 @@ class SlideDraft(SlideCommon):
 
 # Slide
 class Slide(SlideCommon):
-    draft_version = models.ForeignKey(SlideDraft, null=True, blank=True, default=None)
+    draft_version = models.ForeignKey(SlideDraft, null=True, blank=True, default=None, on_delete = models.SET_NULL)
     saved = models.BooleanField(blank=True, default=False)
 
     @classmethod

@@ -199,9 +199,9 @@ def edit_content(request, content_id):
         # Check if canceling a draft.
         if 'cancel' in request.POST:
             if draft_slide != None:
-                content.draft_slide = None
-                content.save()
                 draft_slide.delete()
+            if not content.saved:
+                content.delete()
             return HttpResponse(json.dumps({'accepted': True}))
 
         form = SlideForm(request.POST)
@@ -216,7 +216,6 @@ def edit_content(request, content_id):
             response['accepted'] = False
             response['errors'] = form.errors
         return HttpResponse(json.dumps(response), content_type="application/json")
-
 
     context = {'content' : content}
     return render(request, 'news/edit_content.html', context)
