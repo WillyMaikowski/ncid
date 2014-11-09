@@ -73,11 +73,13 @@ function ContentEditor() {
             // Get the slides.
             $.getJSON(content.url(), function(data) {
                 // Read the slide data.
-                content.readData(data[0]);
-                self.contentSlide = content;
-                
-                // Display the slide
-                self.changeSlide();
+                content.readData(data[0], function() {
+                    self.contentSlide = content;
+                    self.contentSlide.useDraft()
+                    
+                    // Display the slide
+                    self.changeSlide();
+                });
             });
         });
     }
@@ -160,6 +162,10 @@ function ContentEditor() {
     }
 
     this.onDurationChanged = function(event) {
+        self.scheduleAutosave();
+    }
+
+    this.onTagChanged = function(event) {
         self.autosave();
     }
 
@@ -181,6 +187,7 @@ function ContentEditor() {
         this.contentSlide.circulation_end = $("#circulation-end").val();
         this.contentSlide.published = $("#published").is(":checked");
         this.contentSlide.display_duration = $("#display-duration").val();
+        this.contentSlide.tag = $("#tag-selection").val();
     }
 
     this.loadMetadata = function() {
@@ -188,6 +195,7 @@ function ContentEditor() {
         $("#circulation-end").val(this.contentSlide.circulationEnd());
         $("#display-duration").val(this.contentSlide.display_duration);
         $("#published").prop("checked", this.contentSlide.published);
+        $("#tag-selection").val(this.contentSlide.tag);
         this.updateContentCharacterCount();
     }
 
@@ -205,8 +213,7 @@ function ContentEditor() {
     // The autosave keeps the current draft flag.
     this.autosave = function() {
         this.onScheduledAutosave = function() {};
-        if(this.contentSlide.draft)
-            this.performSave(this.contentSlide.draft);
+        this.performSave(true);
     }
 
     // Delayed autosave. Used for text input.
@@ -252,7 +259,7 @@ function ContentEditor() {
             }
 
             // Update the draft bar
-            if(this.titleChanged && asDraft || (wasDraft && !asDraft))
+            if(this.titleChanged || asDraft || wasDraft != asDraft)
                 draftBar.load();
             this.titleChanged = false;
 
@@ -263,6 +270,7 @@ function ContentEditor() {
     }
 
     this.preview = function() {
+        this.autosave();
         var win = window.open(this.contentSlide.previewUrl(), '_blank');
         return win;
     }
@@ -452,6 +460,7 @@ $(document).ready(function() {
 
     // Metadata edition events.
     $( "#display-duration").on("input", contentEditor.onDurationChanged);
+    $( "#tag-selection").change(contentEditor.onTagChanged)
 
     contentEditor.registerTemplateSelectionAction();
 });

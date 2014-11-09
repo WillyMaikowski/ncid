@@ -9,6 +9,7 @@ function NewsDisplay() {
     this.contents = [];
     this.eventURL = CurrentEventURL;
     this.contentURL = CurrentContentURL;
+    this.previewingDrafts = false;
 
     // Starts the news display
     this.start = function() {
@@ -76,7 +77,19 @@ function NewsDisplay() {
 
     // Loads the content data.
     this.loadContent = function(data) {
-        var contents = readContentArray(data);
+        var self = this;
+        readContentArray(data, function(contents) {
+            self.loadedContent(contents);
+        });
+    }
+
+    this.loadedContent = function(contents) {
+        // Use the draft version if we are previewing.
+        if(this.previewingDrafts) {
+            for(var i = 0; i < contents.length; ++i)
+                contents[i].useDraft();
+        }
+
         if(!this.hasContentChanges(contents))
             return;
         this.contents = contents;
