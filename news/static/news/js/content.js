@@ -439,7 +439,7 @@ function readContentArray(contents, fullLoadHandler) {
 
     // Check if it was loaded early
     if(remainingLoad == 0 && fullLoadHandler)
-        fullLoadHandle(loadedContents);
+        fullLoadHandler(loadedContents);
 
     return loadedContents;
 }
