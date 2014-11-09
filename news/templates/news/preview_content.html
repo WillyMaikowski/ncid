@@ -2,7 +2,24 @@
 
 {% block start_script %}
         <script>
+            function rx() {
+                var dia = [ "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado" ];
+                var now = new Date();
+
+                h = now.getHours();
+                m = now.getMinutes();
+                s = now.getSeconds();
+                h = h<10?"0"+h:h;
+                m = m<10?"0"+m:m;
+                s = s<10?"0"+s:s;
+
+                format = h+":"+m+":"+s;
+                format2 = dia[now.getDay()]+" "+now.getDate();
+                $('#rx').html('<h2 class="h2-reloj">'+format+'<br/>'+format2+'</h2>');
+                setTimeout( "rx()", 1000 );
+            }
             $(window).load(function() {
+                rx();
                 newsDisplay.previewingDrafts = true;
                 newsDisplay.startPreviewFor(null, "{% url 'get_content' content_id=content.pk %}");
             })
