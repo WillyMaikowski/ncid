@@ -27,6 +27,7 @@
     <body>
         <!-- The header with the navigaton bar -->
         <div class="container">
+            <br/>
             <div class="navbar navbar-default" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
@@ -50,34 +51,38 @@
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- The left panel -->
-        <aside class="panel-group" id="leftPanel">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#accordion" href="#draftsBlockCollapse">Borradores</a>
-                    </h4>
-                </div>
-                <div id="draftsBlockCollapse" class="panel-collapse collapse in">
-                    <div class="panel-body">
-                        <table class="table" id="draftsBlock">
-                        </table>
+            <div class="row">
+                <!-- The left panel -->
+                <aside class="panel-group col-xs-3" id="leftPanel">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#draftsBlockCollapse">Borradores</a>
+                        </h4>
+                    </div>
+                    <div id="draftsBlockCollapse" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <table class="table" id="draftsBlock">
+                            </table>
+                        </div>
                     </div>
                 </div>
+                </aside>
+
+                <!-- wrap -->
+                <div class="col-xs-9">
+                    <!-- The main content -->
+                    <section id="contentSection" class="content">
+                    {% block content %}{% endblock %}
+                    </section>
+
+                    <!-- The footer -->
+                    <footer>
+                    {% block footer %}{% endblock %}
+                    </footer>
+                </div>
             </div>
-        </aside>
-
-        <!-- The main content -->
-        <section id="contentSection" class="content">
-            {% block content %}{% endblock %}
-        </section>
-
-        <!-- The footer -->
-        <footer>
-            {% block footer %}{% endblock %}
-        </footer>
+        </div>
     </body>
 </html>
 
