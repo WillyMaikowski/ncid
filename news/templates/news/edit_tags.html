@@ -1,8 +1,10 @@
 {% extends "news/base.html" %}
 
 {% block content %}
-<h2>Editar Tags</h2>
 
+
+<h2>Editar Tags</h2>
+{% if tags %}
 <table>
     <thead>
         <tr><th>Nombre</th></tr>
@@ -13,21 +15,25 @@
         {% csrf_token %}
     
         <input type="hidden" name="name" value="{{ tag.name }}" />
-        <tr>
-            <td>{{ tag.name }}</td>
-            <td><input type="submit" name="deleteTag" value="Borrar" /></td>
+        <tr style="border-top:1px solid lightGrey;">
+            <td style="padding:5px;">{{ tag.name }}</td>
+            <td style="padding:5px;"><input type="submit" class="btn btn-xs btn-danger" name="deleteTag" value="Borrar" /></td>
         </tr>
     </form>
     {% endfor %}
     </tbody>  
 </table>
+{% else %}
+<p>Aun no se ha creado ningun tag.</p>
+{% endif %}
 
 <h2>Nuevo Tag</h2>
 <form action="{% url 'edit_tags' %}" method="post">
     {% csrf_token %}
-    
-    <input type="text" name="name" value="" />
-    <input type="submit" name="addTag" value="Agregar" />
+    <div style="float:left;width:20%;">
+        <input type="text" class="form-control input-sm" name="name" value="" style="border-top-right-radius:0;border-bottom-right-radius:0;" />
+    </div>
+    <input type="submit" class="btn btn-sm btn-warning" name="addTag" value="Agregar" style="border-top-left-radius:0;border-bottom-left-radius:0;" />
 </form>
 
 {% endblock %}
