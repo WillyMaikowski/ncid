@@ -52,12 +52,17 @@ function Searcher() {
         var circulation_end = $('<td class="search-result-circulation-end"></td>').html(content.circulationEnd());
 
         var published = $('<td class="search-result-circulation-end">Publicado</td>');
-        var published_box = $('<input type="checkbox" >').prop("checked", content.published);
-        published_box.change(function() {
-            $.post(content.publishUrl(), {published: published_box.prop("checked")});
-        });
 
-        published.prepend(published_box);
+        if(content.published)
+            published.html("Publicado");
+        else
+            published.html("No Publicado");
+        //var published_box = $('<input type="checkbox" >').prop("checked", content.published);
+        //published_box.change(function() {
+        //    $.post(content.publishUrl(), {published: published_box.prop("checked")});
+        //});
+        //
+        //published.prepend(published_box);
 
         return $('<tr></tr>')
                     .append(title)
