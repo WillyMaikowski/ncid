@@ -243,8 +243,8 @@ def upload_content_image(request, content_id):
     if request.method == 'POST':
         form = UploadImageForm(request.POST, request.FILES)
         if form.is_valid():
-            content.draft_slide.image = request.FILES['image']
-            content.draft_slide.save();
+            content.draft_version.image = request.FILES['image']
+            content.draft_version.save();
             response = {'accepted': True}
 
     return HttpResponseRedirect(reverse('edit_content', kwargs={'content_id': content.pk }))
