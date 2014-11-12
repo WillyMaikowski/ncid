@@ -152,6 +152,11 @@ function ContentEvent() {
     this.onDraftLoaded = function(action) {
         action();
     }
+
+    this.titleText = function() {
+        return this.title;
+    }
+
 }
 
 
@@ -236,6 +241,10 @@ function SlideDraft() {
         this.tag = fields.tag;
         if(done)
             done();
+    }
+
+    this.titleText = function() {
+        return $("<div></div>").html(this.title).text();
     }
 }
 
@@ -409,7 +418,11 @@ function ContentSlide() {
                         .append(this.view.mainElement)
                     )
                 )
-    } 
+    }
+
+    this.titleText = function() {
+        return $("<div></div>").html(this.title).text();
+    }
 }
 
 function readContentArray(contents, fullLoadHandler) {

@@ -295,7 +295,7 @@ def search_content_by_title(term):
 
 def search_content_by_date(term):
     parsedDate = datetime.strptime(term, '%d/%m/%Y').date()
-    events = Event.objects.filter(date=parsedDate).order_by('-date_time')
+    events = Event.objects.filter(circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
     slides = Slide.objects.filter(saved=True, circulation_start__lte=parsedDate, circulation_end__gte=parsedDate).order_by('-circulation_start')
     return list(chain(events, slides))
 

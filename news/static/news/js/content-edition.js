@@ -54,6 +54,21 @@ function ContentEditor() {
         this.autosave();
     }
 
+    this.removeFormat = function() {
+        document.execCommand("removeFormat", false, null);
+        this.autosave();
+    }
+
+    this.fontSize = function(size) {
+        document.execCommand("fontSize", false, size);
+        this.autosave();
+    }
+
+    this.foreColor = function(color) {
+        document.execCommand("foreColor", false, color);
+        this.autosave();
+    }
+
     this.changeSlide = function() {
         var slideContainer = $('#slideContainer');
         slideContainer.empty();

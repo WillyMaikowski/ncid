@@ -44,6 +44,47 @@
     </div>
 
     <div class="btn-group">
+        <button class="btn" id="justify-right" onclick="contentEditor.removeFormat()">
+            <span class="icon-tango-bold"></span>Quitar Formato.
+        </button>
+    </div>
+
+    <div class="btn-group">
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
+                Tamaño Fuente
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="fontSelectionDropDown">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(1)">1</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(2)">2</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(3)">3</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(4)">4</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(5)">5</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(6)">6</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(7)">7</a></li>
+            </ul>
+        </div>
+        <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
+                Color Fuente
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="fontSelectionDropDown">
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('black')">Negro</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('white')">Blanco</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('red')">Rojo</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('green')">Verde</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('blue')">Azul</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('yellow')">Amarillo</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('magenta')">Magenta</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('cyan')">Cyan</a></li>
+
+            </ul>
+        </div>
+    </div>
+
+    <div class="btn-group">
         <button class="btn" id="slide-template" onclick="contentEditor.templateSelection()" >
             Plantilla
         </button>

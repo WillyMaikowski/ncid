@@ -42,7 +42,7 @@ function Searcher() {
 
     // Makes the row for a content.
     this.makeContentRow = function(content) {
-        var title_link = $('<a></a>').attr('href', content.editUrl()).html(content.title)
+        var title_link = $('<a></a>').attr('href', content.editUrl()).html(content.titleText())
         var title = $('<td class="search-result-title"></td>').append(title_link);
 
         var type = $('<td class="search-result-type"></td>').html(content.contentType());

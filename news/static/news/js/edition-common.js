@@ -75,7 +75,7 @@ function DraftBar() {
         var element = $( "<a></a>" );
         element.attr("href", content.editUrl());
         content.onDraftLoaded(function () {
-            element.html(content.draft_version.title);
+            element.html(content.draft_version.titleText());
         });
         block.append($( "<tr></tr>").append( $("<td></td>").append(element)) );
     }
