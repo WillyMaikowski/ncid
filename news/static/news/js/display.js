@@ -86,9 +86,14 @@ function NewsDisplay() {
     // Loads the content data.
     this.loadContent = function(data) {
         var self = this;
-        readContentArray(data, function(contents) {
-            self.loadedContent(contents);
-        });
+        if(this.previewingDrafts) {
+            readContentArray(data, function(contents) {
+                self.loadedContent(contents);
+            });
+        }
+        else {
+            self.loadedContent(readContentArray(data));
+        }
     }
 
     this.loadedContent = function(contents) {
