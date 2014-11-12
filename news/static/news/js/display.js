@@ -67,11 +67,19 @@ function NewsDisplay() {
         var eventPanel = $("#events-panel");
         eventPanel.empty();
 
-        // Create the event elements
-        for(var i = 0; i < events.length; ++i) {
-            var event = events[i];
-            var display = event.renderDisplay();
-            eventPanel.append(display);
+        if( events.length == 0 ) {
+            $( '#contents-section' ).removeClass( 'col-xs-9' ).addClass( 'col-xs-12' );
+            $( '#events-section' ).removeClass( 'col-xs-3' ).addClass( 'hidden' );
+        }
+        else {
+            $( '#contents-section' ).removeClass( 'col-xs-12' ).addClass( 'col-xs-9' );
+            $( '#events-section' ).removeClass( 'hidden' ).addClass( 'col-xs-3' );
+            // Create the event elements
+            for(var i = 0; i < events.length; ++i) {
+                var event = events[i];
+                var display = event.renderDisplay();
+                eventPanel.append(display);
+            }
         }
     }
 
