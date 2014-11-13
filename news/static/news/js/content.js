@@ -145,7 +145,10 @@ function ContentEvent() {
     // It creates the event text.
     this.eventText = function() {
         // Do this more properly.
-        return this.title + '<br>' + this.lecturer + '<br>' + this.place + '<br> ' + this.date_time;
+        return  '<h3 class="pull-left" style="width:100%;">'+
+                    '<strong>Charla: </strong>' + this.title + '</h3><br/><br/>'+
+                '<img src="'+this.image+'" title="" class="pull-right" style="max-width:40%;"/>'+
+                '<h3 class="pull-left"><strong>Charlista:</strong><br/>' + this.lecturer + '<br/><strong>Fecha y Hora:</strong><br/>' + this.date_time + '<br/><strong>Lugar:</strong><br/>' + this.place + '</h3>';
     }
 
     // Hack for loading

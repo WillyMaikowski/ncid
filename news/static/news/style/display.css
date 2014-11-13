@@ -37,23 +37,10 @@
 
 html, 
 body,
-.contenido-principal,
-.eventos,
 .carousel, 
 .carousel-inner, 
 .carousel-inner .item {
     height: 100%;
-}
-
-.contenido-principal {
-    float: left;
-    width: 80%;
-}
-.eventos {
-    float: left;
-    width: 20%;
-    background-color: lightgrey;
-    overflow: hidden;
 }
 
 .parent {
@@ -72,20 +59,15 @@ body,
     position: relative;
     width: 80%;
     margin: 0 auto;
-    border: 1px solid white;
-}
-.evento:before{
-    content: "";
-    display: block;
-    padding-top: 100%;
+    border: 1px solid black;
+    background-color: white;
 }
 .content{
-    position:  absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
     overflow: hidden;
+    margin: 5px;
+}
+.content h3 {
+    font-size: 2.5vh;
 }
 
 img {
@@ -93,4 +75,8 @@ img {
     max-width: 100%;
     width: auto;
     height: auto;
+}
+
+#events-panel {
+    margin-top: 5px;
 }
