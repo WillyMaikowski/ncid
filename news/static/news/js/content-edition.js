@@ -194,7 +194,7 @@ function ContentEditor() {
 
     this.updateTitleCharacterCount = function() {
         var text = this.contentSlide.view.title.text();
-        $("#title-character-count").html("Caracteres Titulo: " + text.length);
+        $("#title-character-count").html("Caracteres Titulo Disponibles: " + (255 - text.length));
     }
     // Helper method to parse dates.
     this.parseDate = function (dateString) {
