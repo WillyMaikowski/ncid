@@ -18,28 +18,28 @@
     </div>
     <div class="btn-group">
         <button class="btn" id="format-bold" onclick="contentEditor.bold()">
-            <span class="icon-tango-bold"></span>Negrita
+            <span class="glyphicon glyphicon-bold" aria-hidden="true"></span>
         </button>
         <button class="btn" id="format-italic" onclick="contentEditor.italic()">
-            <span class="icon-tango-italic"></span>Cursiva
+            <span class="glyphicon glyphicon-italic" aria-hidden="true"></span>
         </button>
         <button class="btn" id="format-underline" onclick="contentEditor.underline()">
-            <span class="icon-tango-underline"></span>Subrayado
+            <span class="glyphicon glyphicon-text-width" aria-hidden="true"></span>
         </button>
     </div>
 
     <div class="btn-group">
         <button class="btn" id="justify-left" onclick="contentEditor.justifyLeft()">
-            <span class="icon-tango-bold"></span>Justificar Izquierda.
+            <span class="glyphicon glyphicon-align-left" aria-hidden="true"></span>
         </button>
         <button class="btn" id="justify-center" onclick="contentEditor.justifyCenter()">
-            <span class="icon-tango-bold"></span>Justificar Centrado.
+            <span class="glyphicon glyphicon-align-center" aria-hidden="true"></span>
         </button>
         <button class="btn" id="justify-right" onclick="contentEditor.justifyRight()">
-            <span class="icon-tango-bold"></span>Justificar Derecha.
+            <span class="glyphicon glyphicon-align-right" aria-hidden="true"></span>
         </button>
         <button class="btn" id="justify-full" onclick="contentEditor.justifyFull()">
-            <span class="icon-tango-bold"></span>Justificar Completo.
+            <span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span>
         </button>
     </div>
 
@@ -51,8 +51,8 @@
 
     <div class="btn-group">
         <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
-                Tamaño Fuente
+            <button class="btn dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
+                <span class="glyphicon glyphicon-text-height" aria-hidden="true"></span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="fontSelectionDropDown">
@@ -65,9 +65,11 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.fontSize(7)">7</a></li>
             </ul>
         </div>
+    </div>
+    <div class="btn-group">
         <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
-                Color Fuente
+            <button class="btn dropdown-toggle" type="button" id="fontSelectionDropDown" data-toggle="dropdown" aria-expanded="true">
+                <span class="glyphicon glyphicon-tint" aria-hidden="true"></span>
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="fontSelectionDropDown">
@@ -79,7 +81,6 @@
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('yellow')">Amarillo</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('magenta')">Magenta</a></li>
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0)" onclick="contentEditor.foreColor('cyan')">Cyan</a></li>
-
             </ul>
         </div>
     </div>
@@ -91,52 +92,56 @@
     </div>
 </div>
 
-<div id="slideErrorMessages">
+<div style="border:1px solid lightGrey;">
+    <div id="slideContainer" class="cell text-center">
+    </div>
+    <div class="col-xs-offset-10">
+        <span id="content-character-count">Caracteres: 0</span>
+    </div>
 </div>
-
-<div id="slideContainer" class="cell text-center">
+<div id="slideErrorMessages">
 </div>
 
 <!-- Select Template Dialog -->
 <div class="modal fade" id="selectTemplateModal" tabindex="-1" role="dialog" aria-labelledby="selectTemplateModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="selectTemplateModalLabel">Seleccionar Plantilla</h4>
-      </div>
-      <div class="modal-body">
-            <div class="btn-group" data-toggle="buttons" id="selectTemplateModalBody">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="selectTemplateModalLabel">Seleccionar Plantilla</h4>
             </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="selectTemplateCancel" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="selectTemplateOK" data-dismiss="modal" >Aceptar</button>
-      </div>
+            <div class="modal-body">
+                <div class="btn-group" data-toggle="buttons" id="selectTemplateModalBody">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="selectTemplateCancel" data-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="selectTemplateOK" data-dismiss="modal" >Aceptar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 <!-- Image Upload Dialog -->
 <div class="modal fade" id="imageUploadModal" tabindex="-1" role="dialog" aria-labelledby="imageUploadModal" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="imageUploadModalLabel">Subir Imagen</h4>
-      </div>
-      <div class="modal-body">
-        <form action="{% url 'upload_content_image' content_id=content.pk %}" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <input type="file" name="image" accept="image/*">
-            <input type="submit" value="enviar">
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" id="imageUploadModalClose" data-dismiss="modal">Cancelar</button>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="imageUploadModalLabel">Subir Imagen</h4>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'upload_content_image' content_id=content.pk %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="file" name="image" accept="image/*">
+                    <input type="submit" value="enviar">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" id="imageUploadModalClose" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 
 {% block initEditor %}
@@ -148,28 +153,48 @@
 
 {% block footer %}
 <div id="contentStatusBar">
-    <span>Inicio Circulación:</span>
-    <input type="text" id="circulation-start" class="dateTimeInput">
-    <span>Fin Circulación:</span>
-    <input type="text" id="circulation-end" class="dateTimeInput">
-    <span>Duracion:</span>
-    <input type="text" id="display-duration" >
-    <span>Tag:</span>
-    <select id="tag-selection">
-        <option value=""></option>
-        {% for tag in tags %}
-            <option value="{{ tag.name }}">{{tag.name}}</option>
-        {% endfor %}
-    </select>
-
-    <span id="content-character-count">Caracteres: 0</span>
-    <br>
-
-    <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()" >Publicado
-    <input type="submit" value="Vista Previa" onclick="contentEditor.preview()">
-    <input type="submit" value="Guardar" onclick="contentEditor.save()">
-    <input type="submit" value="Cancelar" onclick="contentEditor.cancel()">
-    <input type="submit" value="Borrar" onclick="contentEditor.delete()">
+    <br/>
+    <div class="form-group col-xs-12">
+        <label class="col-xs-2" for="circulation-start">Inicio Circulación:</label>
+        <div class="col-xs-4">
+            <input type="text" id="circulation-start" class="form-control dateTimeInput">
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <label class="col-xs-2" for="circulation-end">Fin Circulación:</label>
+        <div class="col-xs-4">
+            <input type="text" id="circulation-end" class="form-control dateTimeInput">
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <label class="col-xs-2" for="display-duration">Duracion:</label>
+        <div class="col-xs-4">
+            <input type="text" id="display-duration" class="form-control">
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <label class="col-xs-2" for="tag-selection">Tag:</label>
+        <div class="col-xs-4">
+            <select id="tag-selection" class="form-control">
+                <option value=""></option>
+                {% for tag in tags %}
+                <option value="{{ tag.name }}">{{tag.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <label class="col-xs-2" for="published">Publicado:</label>
+        <div class="col-xs-4">
+            <input type="checkbox" id="published" onchange="contentEditor.publishedChanged()"/>
+        </div>
+    </div>
+    <div class="form-group col-xs-12">
+        <input class="btn btn-sm btn-warning" type="submit" value="Vista Previa" onclick="contentEditor.preview()">
+        <input class="btn btn-sm btn-warning" type="submit" value="Guardar" onclick="contentEditor.save()">
+        <input class="btn btn-sm btn-danger" type="submit" value="Cancelar" onclick="contentEditor.cancel()">
+        <input class="btn btn-sm btn-danger" type="submit" value="Borrar" onclick="contentEditor.delete()">
+    </div>
 </div>
 {% endblock %}
 
