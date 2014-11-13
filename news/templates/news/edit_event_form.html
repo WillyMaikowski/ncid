@@ -3,16 +3,31 @@
 {% block content %}
 <h2>Editar Evento</h2>
 
-<form action="{% url 'edit_event' event_id=event_id %}" method="post" enctype="multipart/form-data">
+<form class="form-horizontal" action="{% url 'edit_event' event_id=event_id %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-    {{ form }}
-    </table>
-    <p><small> Evento creado en {{ creation_timestamp }}</small></p>
-    <input type="submit" name="save" value="Guardar Cambios" default/>
-    <input type="submit" name="delete" value="Borrar Evento" />
-    <input type="submit" name="cancel" value="Cancelar" />
+    {% for field in form %}
+    <div class="form-group">
+        {{ field.errors }}
+        <label for="{{ field.id_for_label }}" class="col-sm-2 control-label">{{ field.label }}</label>
+        <div class="col-sm-4">
+            {{ field }}
+        </div>
+    </div>
+    {% endfor %}
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10">
+            <p><small> Evento creado en {{ creation_timestamp }}</small></p>
+            <input class="btn btn-sm btn-warning" type="submit" name="save" value="Guardar Cambios" default/>
+            <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Borrar Evento" />
+            <input class="btn btn-sm btn-danger" type="submit" name="cancel" value="Cancelar" />
+        </div>
+    </div>
 </form>
+<script>
+    $(function(){
+        $( '.form-group input[type=text]' ).addClass( 'form-control' );
+    });
+</script>
 
 {% endblock %}
 
