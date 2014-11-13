@@ -156,6 +156,7 @@ function ContentEditor() {
 
     this.onTitleChanged = function(event) {
         this.titleChanged = true;
+        self.updateTitleCharacterCount();
         self.scheduleAutosave();
     }
 
@@ -191,6 +192,10 @@ function ContentEditor() {
         $("#content-character-count").html("Caracteres: " + text.length);
     }
 
+    this.updateTitleCharacterCount = function() {
+        var text = this.contentSlide.view.title.text();
+        $("#title-character-count").html("Caracteres Titulo: " + text.length);
+    }
     // Helper method to parse dates.
     this.parseDate = function (dateString) {
         $.datepicker
@@ -212,6 +217,7 @@ function ContentEditor() {
         $("#published").prop("checked", this.contentSlide.published);
         $("#tag-selection").val(this.contentSlide.tag);
         this.updateContentCharacterCount();
+        this.updateTitleCharacterCount();
     }
 
     this.updateModel = function() {
