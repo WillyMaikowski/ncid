@@ -151,7 +151,11 @@ function ContentEvent() {
         if(this.image && this.image.length)
             code += '<img src="/media/'+this.image+'" title="" class="pull-right" style="max-width:40%;"/>';
 
-        code += '<h3 class="pull-left"><strong>Charlista:</strong><br/>' + this.lecturer + '<br/><strong>Fecha y Hora:</strong><br/>' + this.date_time + '<br/><strong>Lugar:</strong><br/>' + this.place + '</h3>';
+        code += '<h3 class="pull-left" style="margin-top:0;max-width:59%;">'
+        code += this.lecturer ? '<strong>Charlista:</strong><br/>' + this.lecturer + '<br/>':'';
+        code += '<strong>Fecha y Hora:</strong><br/>' + this.date_time + '<br/>';
+        code += '<strong>Lugar:</strong><br/>' + this.place; 
+        code += '</h3>';
         return code;
     }
 
