@@ -38,7 +38,10 @@
                 font-family:'Bevan',cursive;
             }
             body {
-                overflow: hidden;
+                overflow-x:hidden;
+            }
+            ::-webkit-scrollbar { 
+                display: none; 
             }
             .h2-reloj {
                 font-size: 3.5vh;
@@ -81,7 +84,7 @@
             <div id="contents-section" class="col-xs-9 h100" style="border-right:1px solid black;">
                 <div class="row" style="height:10%;border-bottom:2px solid black;">
                     <div class="col-xs-12 text-center h100 bg-blue">
-                        <h1>Noticias</h1>
+                        <h1 id="item-tag">Noticias</h1>
                     </div>
                 </div>
                 <div class="row bg-grey" style="height:80%;">
@@ -99,7 +102,7 @@
                 </div>
                 <div class="row" style="height:10%;border-top:2px solid black;">
                     <div class="col-xs-2 text-center bg-grey h100">
-                        <img src="{% static 'news/style/images/logodcc.png' %}" alt="Logo DCC" style="margin:5px;max-width:70%;"/>
+                        <img src="{% static 'news/style/images/logodcc.png' %}" alt="Logo DCC" style="margin:5px;max-width:70%;max-height:9vh;"/>
                     </div>
                     <div id="rx" class="col-xs-3 text-center bg-black h100">
                         <h2>Reloj</h2>
@@ -110,7 +113,7 @@
                 </div>
             </div>
             <div id="events-section" class="col-xs-3 h100" style="border-left:2px solid white;">
-                <div class="row" style="height:10%;border-left:1px solid black;border-bottom:2px solid black;">
+                <div id="tit" class="row" style="height:10%;border-left:1px solid black;border-bottom:2px solid black;">
                     <div class="col-xs-12 text-center bg-blue h100">
                         <h1>Eventos</h1>
                     </div>
@@ -142,6 +145,41 @@
             $(function() {
                 rx();
                 newsDisplay.start();
+
+                $( '#carousel' ).on( 'slide.bs.carousel', function() {
+                    var tag = $('.carousel-inner .active').attr( 'data-tag' );
+                    $('#item-tag').html( tag?tag:'Contenido' );
+                } );
+
+                var o = false;
+                setInterval(function () {
+                    var $header2 = $('#events-panel');
+                    var oheight = 90;
+                    var docheight = $('#events-panel').height()+$('#tit').height()+5;
+                    var winheight = $(window).height();
+                    var height = docheight - winheight + oheight;
+                    if( docheight <= winheight && o == false ) {
+                        return;
+                    }
+                    if( o == true ) {
+                        option = '0';
+                        o = false;
+                    }
+                    else {
+                        option = '-'+height;
+                        o = true;
+                    }
+                    $header2.css({
+                        transform: 'translateY(' + option + 'px)',
+                        MozTransform: 'translateY(' + option + 'px)',
+                        WebkitTransform: 'translateY(' + option + 'px)',
+                        msTransform: 'translateY(' + option + 'px)',
+                        transition: 'all 10s linear',
+                        MozTransition: 'all 10s linear',
+                        WebkitTransition: 'all 10s linear',
+                        msTransition: 'all 10s linear'
+                    });
+                }, 10500);
             });
         </script>
         {% endblock %}

@@ -149,7 +149,7 @@ function ContentEvent() {
         var code =  '<h3 class="pull-left" style="width:100%;">'+
                     '<strong>Charla: </strong>' + this.title + '</h3><br/><br/>';
         if(this.image && this.image.length)
-            code += '<img src="/media/'+this.image+'" title="" class="pull-right" style="max-width:40%;"/>';
+            code += '<img src="/media/'+this.image+'" title="" class="pull-right" style="max-width:40%;max-height:12vh;"/>';
 
         code += '<h3 class="pull-left" style="margin-top:0;max-width:59%;">'
         code += this.lecturer ? '<strong>Charlista:</strong><br/>' + this.lecturer + '<br/>':'';
@@ -168,6 +168,13 @@ function ContentEvent() {
         return this.title;
     }
 
+    this.equals = function(o) {
+        return this.id == o.id && this.author == o.author &&
+                this.title == o.title && this.lecturer == o.lecturer &&
+                this.place == o.place && this.date_time == o.date_time &&
+                this.image == o.image && this.circulation_start == o.circulation_start &&
+                this.circulation_end == o.circulation_end && this.tag == o.tag;
+    }
 }
 
 
@@ -272,6 +279,7 @@ function ContentSlide() {
     this.display_duration = 15.0;
     this.template = null;
     this.draft = false;
+    this.tag = "Contenido"
 
     this.view = new ContentSlideView(this);
 
@@ -424,6 +432,7 @@ function ContentSlide() {
         this.view.update();
         return $('<div class="item" />')
                 .attr("data-interval", this.display_duration*1000)
+                .attr( "data-tag", this.tag )
                 .append( $('<div class="parent" />')
                     .append( $('<div class="cell text-center" />')
                         .append(this.view.mainElement)

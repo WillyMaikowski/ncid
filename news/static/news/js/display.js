@@ -7,6 +7,7 @@ var RefreshInterval = 3000;
 function NewsDisplay() {
     this.firstContentRender = true;
     this.contents = [];
+    this.events = [];
     this.eventURL = CurrentEventURL;
     this.contentURL = CurrentContentURL;
     this.previewingDrafts = false;
@@ -63,17 +64,23 @@ function NewsDisplay() {
         // Read the events data.
         var events = readContentArray(data);
 
-        // Clear the old content.
-        var eventPanel = $("#events-panel");
-        eventPanel.empty();
-
         if( events.length == 0 ) {
             $( '#contents-section' ).removeClass( 'col-xs-9' ).addClass( 'col-xs-12' );
             $( '#events-section' ).removeClass( 'col-xs-3' ).addClass( 'hidden' );
+            if( ! this.hasEventChanges( events ) ) return;
+            this.events = events;
+            // Clear the old content.
+            var eventPanel = $("#events-panel");
+            eventPanel.empty();
         }
         else {
             $( '#contents-section' ).removeClass( 'col-xs-12' ).addClass( 'col-xs-9' );
             $( '#events-section' ).removeClass( 'hidden' ).addClass( 'col-xs-3' );
+            if( ! this.hasEventChanges( events ) ) return;
+            this.events = events;
+            // Clear the old content.
+            var eventPanel = $("#events-panel");
+            eventPanel.empty();
             // Create the event elements
             for(var i = 0; i < events.length; ++i) {
                 var event = events[i];
@@ -193,6 +200,16 @@ function NewsDisplay() {
                 return true;
         }
         return false;
+    }
+
+    this.hasEventChanges = function( newEvents ) {
+        if(this.events.length != newEvents.length)
+            return true;
+        for(var i = 0; i < this.events.length; ++i) {
+            if( ! this.events[i].equals(newEvents[i]) )
+                return true;
+        }
+        return false; 
     }
 }
 
