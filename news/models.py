@@ -34,7 +34,7 @@ class Content(models.Model):
 
 # Event class
 class Event(Content):
-    lecturer = models.CharField(u"Charlista", max_length=100)
+    lecturer = models.CharField(u"Charlista", max_length=100, blank=True)
     place = models.CharField(u"Lugar", max_length=255)
     date_time = models.DateTimeField(u"Fecha y Hora", default=timezone.now)
 
