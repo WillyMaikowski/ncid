@@ -69,7 +69,7 @@ class Template(models.Model):
 class SlideCommon(Content):
     content = models.TextField(u"Contenido", blank=True)
     template = models.ForeignKey(Template)
-    tag = models.ForeignKey(Tag, null=True, on_delete = models.SET_NULL)
+    tag = models.CharField(max_length=64, blank=True, null=True)
     display_duration = models.FloatField(u"Tiempo en pantalla", default=15.0, validators=[MinValueValidator(1.0)])
 
     def setContent(self, content):
