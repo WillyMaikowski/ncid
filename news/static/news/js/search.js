@@ -46,6 +46,7 @@ function Searcher() {
         var title = $('<td class="search-result-title"></td>').append(title_link);
 
         var type = $('<td class="search-result-type"></td>').html(content.contentType());
+        console.log(content.tag);
         var tag = $('<td class="search-result-type"></td>').html(content.tag);
         var author = $('<td class="search-result-author"></td>').html(content.author);
         var circulation_start = $('<td class="search-result-circulation-start"></td>').html(content.circulationStart());
