@@ -144,6 +144,12 @@ function ContentEvent() {
 
     // It creates the event text.
     this.eventText = function() {
+        moment.locale('en', {
+             monthsShort : [
+                "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+                "Jul", "Ago", "Sep", "Oct", "Nov", "Dec"
+             ]
+        });
         // Do this more properly.
         // TODO: Check if the image is present.
         var code =  '<h3 class="pull-left" style="width:100%;">'+
@@ -153,7 +159,7 @@ function ContentEvent() {
 
         code += '<h3 class="pull-left" style="margin-top:0;max-width:59%;">'
         code += this.lecturer ? '<strong>Charlista:</strong><br/>' + this.lecturer + '<br/>':'';
-        code += '<strong>Fecha y Hora:</strong><br/>' + this.date_time + '<br/>';
+        code += '<strong>Fecha y Hora:</strong><br/>' + moment(this.date_time).locale('es').format('DD MMM, hh:mm') + '<br/>';
         code += '<strong>Lugar:</strong><br/>' + this.place; 
         code += '</h3>';
         return code;
