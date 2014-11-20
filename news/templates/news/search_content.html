@@ -2,8 +2,14 @@
 {% load staticfiles %}
 
 {% block head %}
-    <script src="{% static 'news/js/content.js' %}" ></script>
-    <script src="{% static 'news/js/search.js' %}" ></script>
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.4/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#datatable').dataTable();
+        } );
+    </script>
 {% endblock %}
 {% block content %}
 
@@ -14,25 +20,7 @@ departamento. En esta pagina podra buscar contenido. Si desea agregar,
 ocupe el menu superior.</p>
 </div>
 
-<div>
-    <div class="col-xs-4">
-        <div class="input-group">
-            <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
-            <input class="form-control input-sm" placeholder="Busqueda" type="text" id="search-term" onkeyup="searcher.termChanged()">
-        </div>
-        <span id="search-message"></span>
-    </div>
-
-    <div class="pull-left text-right">
-        <label for="search-category">Categoria:</label>
-        <select id="search-category">
-            <option value="title">Titulo</title>
-            <option value="date">Fecha</title>
-        </select>
-    </div>
-</div>
-
-<table id="search-results" class="table table-bordered">
+<table id="datatable" class="table table-bordered table-stripped">
     <thead>
         <tr>
             <th>Titulo</th>
@@ -45,6 +33,17 @@ ocupe el menu superior.</p>
         </tr>
     </thead>
     <tbody>
+        {% for e in elementos %}
+        <tr>
+            <td><a href="{{e.url}}">{{e.title}}</a></td>
+            <td>{{e.tipo}}</td>
+            <td>{% if e.tag != None %}{{e.tag.name}}{% endif %}</td>
+            <td>{{e.author}}</td>
+            <td>{{e.circulation_start}}</td>
+            <td>{{e.circulation_end}}</td>
+            <td>{% if e.published %}Publicado{% else %}No Publicado{% endif %}</td>
+        </tr>
+        {% endfor %}
     </body>
 </table>
 

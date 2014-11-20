@@ -70,7 +70,7 @@ class SlideForm(forms.Form):
                 old_draft = slide.draft_version
                 slide.image = slide.draft_version.image
                 slide.draft_version = None
-            
+
 
         dest_slide.title = data['title']
         dest_slide.content = data['text']
@@ -280,7 +280,19 @@ def add_content(request):
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def search_content(request):
-    context = {}
+    events = Event.objects.all()
+    for e in events:
+        e = e.__dict__
+        e['tipo'] = "Evento"
+        e['url'] = "/news/event/"+str(e['id'])+"/edit"
+    slides = Slide.objects.all().filter(saved=True)
+    for s in slides:
+        s = s.__dict__
+        s['tipo'] = "Contenido"
+        s['url'] = "/news/content/"+str(e['id'])+"/edit"
+    context = {
+            'elementos': list( chain( events, slides ) )
+    }
     return render(request, 'news/search_content.html', context)
 
 def news_display(request):
@@ -326,11 +338,11 @@ def edit_tags(request):
 # Methods used via AJAX
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def all_events(request):
-    return HttpResponse(serializers.serialize("json", Event.objects.all()), content_type="application/json")    
+    return HttpResponse(serializers.serialize("json", Event.objects.all()), content_type="application/json")
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def all_contents(request):
-    return HttpResponse(serializers.serialize("json", Slide.objects.all()), content_type="application/json")    
+    return HttpResponse(serializers.serialize("json", Slide.objects.all()), content_type="application/json")
 
 @user_passes_test(user_can_edit, login_url=LoginURL)
 def get_content(request, content_id):
@@ -352,7 +364,7 @@ def search_content_query_json(request):
         return HttpResponse(serializers.serialize("json", queryResult), content_type="application/json")
     except (KeyError, ValueError):
         return HttpResponse("[]", content_type="application/json")
-    
+
 # Public AJAX methods
 def all_tags(request):
     return HttpResponse(serializers.serialize("json", Tag.objects.all()), content_type="application/json")
