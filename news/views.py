@@ -289,7 +289,7 @@ def search_content(request):
     for s in slides:
         s = s.__dict__
         s['tipo'] = "Contenido"
-        s['url'] = "/news/content/"+str(e['id'])+"/edit"
+        s['url'] = "/news/content/"+str(s['id'])+"/edit"
     context = {
             'elementos': list( chain( events, slides ) )
     }
