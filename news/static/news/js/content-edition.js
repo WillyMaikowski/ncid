@@ -2,7 +2,7 @@
 var BaseURL = '/news/';
 var IndexURL = BaseURL;
 var AddContentURL = BaseURL + 'content/add';
-var EditAutosaveTime = 5000;
+var EditAutosaveTime = 3000;
 
 // The content editor.
 function ContentEditor() {
