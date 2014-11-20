@@ -26,9 +26,7 @@
     </head>
     <body>
         <!-- The header with the navigaton bar -->
-        <div class="container">
-            <br/>
-            <div class="navbar navbar-default" role="navigation">
+        <div class="navbar navbar-default" role="navigation">
                 <div class="container-fluid">
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -40,9 +38,11 @@
                         <a class="navbar-brand" href="/news"><span class="glyphicon glyphicon-globe"></span>&nbsp; Noticias DCC</a>
                     </div>
                     <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav navbar-collapse">
+                            <li><a href="{% url 'news_display'%}" target="_blank">Pantalla</a></li>
+                        </ul>
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="{% url 'search_content' %}">Buscar Contenido</a></li>
-                            <li><a href="{% url 'news_display'%}" target="_blank">Pantalla de Noticias</a></li>
                             <li><a href="{% url 'add_event' %}">Agregar Evento</a></li>
                             <li><a href="{% url 'add_content' %}">Agregar Contenido</a></li>
                             <li><a href="{% url 'edit_tags' %}">Tags</a></li>
@@ -51,6 +51,8 @@
                     </div>
                 </div>
             </div>
+        <div class="container">
+            <br/>
             <div class="row">
                 <!-- The left panel -->
                 <aside class="panel-group col-xs-3" id="leftPanel">
