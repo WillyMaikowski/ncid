@@ -56,6 +56,7 @@ function ContentEditor() {
 
     this.removeFormat = function() {
         document.execCommand("removeFormat", false, null);
+        getSelectionHtml()
         this.autosave();
     }
 
@@ -91,7 +92,7 @@ function ContentEditor() {
                 content.readData(data[0], function() {
                     self.contentSlide = content;
                     self.contentSlide.useDraft()
-                    
+
                     // Display the slide
                     self.changeSlide();
                 });
@@ -281,12 +282,12 @@ function ContentEditor() {
 
             // Update the draft bar
             if(this.titleChanged || asDraft || wasDraft != asDraft)
-                draftBar.load();
-            this.titleChanged = false;
+            draftBar.load();
+        this.titleChanged = false;
 
-            // Peform the after action.
-            if(afterAction)
-                afterAction();
+        // Peform the after action.
+        if(afterAction)
+            afterAction();
         });
     }
 
@@ -376,11 +377,11 @@ ContentEditor.prototype.performTemplateSelection = function() {
 
     // Template Selection dialog.
     var dialog = $('#selectTemplateModal')
-    var dialogBody = $('#selectTemplateModalBody');
+        var dialogBody = $('#selectTemplateModalBody');
     dialogBody.empty()
 
-    // Add an element for each template
-    var templates = SlideTemplates.all;
+        // Add an element for each template
+        var templates = SlideTemplates.all;
     if(this.contentSlide.template == null)
         this.contentSlide.template = templates[0];
 
@@ -425,7 +426,7 @@ ContentEditor.prototype.performTemplateSelection = function() {
     // Open the dialog
     dialog.modal({
         backdrop: 'static',
-        keyboard: false
+    keyboard: false
     });
 
     this.templateSelectionAction = function(result) {
@@ -449,6 +450,70 @@ ContentEditor.prototype.performTemplateSelection = function() {
             // Restore the old template.
             self.useTemplate(oldTemplate);
         }
+    }
+}
+
+function cleanHTML(input) {
+    // 1. remove line breaks / Mso classes
+    var stringStripper = /(\n|\r| class=(")?Mso[a-zA-Z]+(")?)/g; 
+    var output = input.replace(stringStripper, ' ');
+    // 2. strip Word generated HTML comments
+    var commentSripper = new RegExp('<!--(.*?)-->','g');
+    var output = output.replace(commentSripper, '');
+    var tagStripper = new RegExp('<(/)*(meta|link|span|\\?xml:|st1:|o:|font)(.*?)>','gi');
+    // 3. remove tags leave content if any
+    output = output.replace(tagStripper, '');
+    // 4. Remove everything in between and including tags '<style(.)style(.)>'
+    var badTags = ['style', 'script','applet','embed','noframes','noscript'];
+
+    for (var i=0; i< badTags.length; i++) {
+        tagStripper = new RegExp('<'+badTags[i]+'.*?'+badTags[i]+'(.*?)>', 'gi');
+        output = output.replace(tagStripper, '');
+    }
+    // 5. remove attributes ' style="..."'
+    var badAttributes = ['style', 'start'];
+    for (var i=0; i< badAttributes.length; i++) {
+        var attributeStripper = new RegExp(' ' + badAttributes[i] + '="(.*?)"','gi');
+        output = output.replace(attributeStripper, '');
+    }
+    return output;
+}
+
+function getSelectionHtml() {
+    var html = "";
+    if (typeof window.getSelection != "undefined") {
+        var sel = window.getSelection();
+        if (sel.rangeCount) {
+            var container = document.createElement("div");
+            for (var i = 0, len = sel.rangeCount; i < len; ++i) {
+                container.appendChild(sel.getRangeAt(i).cloneContents());
+            }
+            html = container.innerHTML;
+        }
+    } else if (typeof document.selection != "undefined") {
+        if (document.selection.type == "Text") {
+            html = document.selection.createRange().htmlText;
+        }
+    }
+    replaceSelectionWithHtml(cleanHTML(html));
+}
+
+function replaceSelectionWithHtml(html) {
+    var range, html;
+    if (window.getSelection && window.getSelection().getRangeAt) {
+        range = window.getSelection().getRangeAt(0);
+        range.deleteContents();
+        var div = document.createElement("div");
+        div.innerHTML = html;
+        var frag = document.createDocumentFragment(), child;
+        while ( (child = div.firstChild) ) {
+            frag.appendChild(child);
+        }
+        range.insertNode(frag);
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        html = (node.nodeType == 3) ? node.data : node.outerHTML;
+        range.pasteHTML(html);
     }
 }
 
@@ -483,6 +548,6 @@ $(document).ready(function() {
     $( "#display-duration").on("input", contentEditor.onDurationChanged);
     $( "#tag-selection").change(contentEditor.onTagChanged)
 
-    contentEditor.registerTemplateSelectionAction();
+        contentEditor.registerTemplateSelectionAction();
 });
 
