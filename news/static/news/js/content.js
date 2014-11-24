@@ -193,9 +193,11 @@ function ContentSlideView(model) {
     this.title = $('<div class="slideTitle"></div>"');
 
     this.text = $('<div class="slideText"></div>"');
-    this.image = $('<img class="slideImage"></img>"');
+    this.image = $('<img></img>"');
+    this.imageDiv = $('<div class="slideImage"></div>"');
+    this.imageDiv.append(this.image)
 
-    this.textImageContainer = $('<div class="slideContent" />').append(this.text).append(this.image);
+    this.textImageContainer = $('<div class="slideContent" />').append(this.text).append(this.imageDiv);
     this.mainElement = $('<div />');
     this.mainElement.append(this.title).append(this.textImageContainer);
 
@@ -214,7 +216,7 @@ function ContentSlideView(model) {
             else
                 this.title.attr("class", this.model.template.title_class);
             this.text.attr("class", this.model.template.text_class);
-            this.image.attr("class", this.model.template.image_class);
+            this.imageDiv.attr("class", this.model.template.image_class);
 
             this.textImageContainer.attr("class", this.model.template.container_class);
             this.mainElement.attr("class", this.model.template.slide_class);
