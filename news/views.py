@@ -87,7 +87,7 @@ class SlideForm(forms.Form):
         if tagName == None or len(tagName) == 0:
             dest_slide.tag = None
         else:
-            dest_slide.tag = Tag.objects.get(pk=tagName)
+            dest_slide.tag = tagName
 
         # Get the associated template.
         dest_slide.template = Template.objects.get(pk=data['template'])
