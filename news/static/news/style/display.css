@@ -71,11 +71,12 @@ body,
 }
 
 .item img {
-    max-height: 65vh;
+    max-height: 60vh;
     max-width: 100%;
     width: auto;
     height: auto;
-    padding-top: 20px;
+    padding-top: 2px;
+    padding-bottom: 10px;
 }
 
 #events-panel {
