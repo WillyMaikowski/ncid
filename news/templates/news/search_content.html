@@ -35,7 +35,7 @@ ocupe el menu superior.</p>
     <tbody>
         {% for e in elementos %}
         <tr>
-            <td><a href="{{e.url}}">{% autoescape off %}{{e.title}}{% endautoescape %}</a></td>
+            <td><a href="{{e.url}}">{% autoescape off %}{{e.title|striptags}}{% endautoescape %}</a></td>
             <td>{{e.tipo}}</td>
             <td>{% if e.tag != None %}{{e.tag}}{% endif %}</td>
             <td>{{e.author}}</td>
