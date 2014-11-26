@@ -1,0 +1,36 @@
+Instrucciones de instalacion:
+
+La aplicacion tiene los siguientes requisitos:
+- Python 2.7
+- Django 1.7
+- Un servidor de base de datos como MySQL o MariaDB.
+
+Para instalar la aplicacion, hay que configurar la base de datos, la URL de los
+archivos que se suben y el lugar en donde se almacenan los archivos que se suben
+en noticias/settings.py .
+
+Una vez teniendo configurada la base de datos, se debe proseguir a poblarla. Para
+ello, se deben correr los siguientes comando en la carpeta raiz de la aplicaci{on:
+
+python manage.py syncdb
+python manage.py loaddata initial_data
+
+El comando syncdb preguntara por los datos para crear un superusuario que tendra
+derechos de administrador y podra utilizar la pagina de administracion de Django
+para la creacion de nuevos usuarios.
+
+La aplicacion requiere que los usuarios
+ordinarios que editan contenidos tengan asignados el permiso 'news.slide.content_edition',
+de lo contrario se les negara el acceso.
+
+Para ejecutar la aplicacion en modo de desarrollo, se puede utilizar el servidor
+de desarrollo de Django. Para iniciar este servidor, hay que utilizar el siguiente
+comando:
+
+python manage.py runserver
+
+Ese comando indicara la URL del servidor de desarrollo.
+
+Para iniciar la aplicacion en modo de produccion, se requiere de un servidor web
+con soporte para UWSGI. Favor dirigirse a la documentacion de su servidor web
+favorito sobre como configurar una aplicacion que funciona mediante UWSGI.
